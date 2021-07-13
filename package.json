@@ -2,10 +2,10 @@
   "name": "category_crud",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "POST/create.js",
   "scripts": {
-    "test": "node index.js",
-    "dev": "nodemon index.js"
+    "start": "node POST/create.js",
+    "dev": "nodemon POST/create.js"
   },
   "keywords": [],
   "author": "",
