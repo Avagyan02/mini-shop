@@ -5,11 +5,10 @@ const Category = require('../models/schema');
 let newCat = {};
 
 app.post('/category', create);
-
 function create(req,res){
   Category
     .create({nameEn: req.body.nameEn, nameRu: req.body.nameRu, nameHy: req.body.nameHy})
-    .then( category => {
+    .then( () => {
       console.log('Category saved');
       res.status(200).json({
         "success": true,
@@ -36,8 +35,7 @@ app.put('/category/:id', (req,res) => {
       nameHy: req.body.nameHy,
     }
   })
-  .then(result =>  {
-    let category = Category.find({_id: req.params.id});
+  .then(() =>  {
     res.status(200).json({
       "success": true,
       "message": "Category updated",
@@ -50,7 +48,29 @@ app.put('/category/:id', (req,res) => {
       }
     })
   })
-  .catch(err => {
-    console.log(err);
+  .catch(() => {
+    res.status(404).json({
+      "success": false,
+      "message": "Not found",
+      "data": null
+    })
   })
 })
+
+app.delete('/category/:id', (req,res) => {
+  Category.findOneAndDelete({_id: req.params.id})
+  .then(() => {
+    res.status(200).json({
+        "success": true,
+        "message": "Category deleted",
+        "data": null
+    })
+  })
+  .catch(() => {
+    res.status(404).json({
+      "success": false,
+      "message": "Not found",
+      "data": null
+    })
+  })
+}) 
