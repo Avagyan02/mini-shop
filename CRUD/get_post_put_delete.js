@@ -74,19 +74,46 @@ app.delete('/category/:id', (req,res) => {
 }) 
 
 app.get('/category/:id', (req,res) => {
-  Category.find({_id: req.params.id}, {__v: 0}, (err,category) => {
-    if(err){
-      res.status(404).json({
-        "success": false,
-        "message": "Not found",
-        "data": null
-      })
-    }else{
+  Category.find({_id: req.params.id}, {__v: 0})
+  .then(result =>{
+    res.status(200).json({
+      "success": true,
+      "message": "Category details fetched",
+      "data": result 
+    })
+  })
+  .catch(() => {
+    res.status(404).json({
+      "success": false,
+      "message": "Not found",
+      "data": null
+    })
+  })
+})  
+
+
+app.get('/category', (req,res) => {
+  if(req.query.pageNo === '1'){
+    Category.find({}, {__v: 0}).limit(Number(req.query.limit))
+    .then(result => {
       res.status(200).json({
         "success": true,
-        "message": "Category details fetched",
-        "data": category 
+        "message": "Category list fetched",
+        data: result  
       })
-    }
-  })  
+    })
+  }else{  
+    const pageNo = Number(req.query.pageNo * 10 - 10);
+    Category.find({}, {__v: 0}).skip(pageNo).limit(Number(req.query.limit))
+    .then(result => {
+      res.status(200).json({
+        "success": true,
+        "message": "Category list fetched",
+        data: [result]
+      })  
+    })
+    .catch(err => {
+      res.send('Not enough elements');
+    })
+  }
 })
