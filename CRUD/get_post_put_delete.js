@@ -2,8 +2,6 @@ const connect = require('../moduls/connect');
 const app = require('../moduls/express');
 const Category = require('../models/schema');
 
-let newCat = {};
-
 app.post('/category', create);
 function create(req,res){
   Category
@@ -74,3 +72,21 @@ app.delete('/category/:id', (req,res) => {
     })
   })
 }) 
+
+app.get('/category/:id', (req,res) => {
+  Category.find({_id: req.params.id}, {__v: 0}, (err,category) => {
+    if(err){
+      res.status(404).json({
+        "success": false,
+        "message": "Not found",
+        "data": null
+      })
+    }else{
+      res.status(200).json({
+        "success": true,
+        "message": "Category details fetched",
+        "data": category 
+      })
+    }
+  })  
+})
