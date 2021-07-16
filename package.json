@@ -2,10 +2,10 @@
   "name": "category_crud",
   "version": "1.0.0",
   "description": "",
-  "main": "",
+  "main": "index.js",
   "scripts": {
-    "start": "node CRUD/get_post_put_delete.js",
-    "dev": "nodemon CRUD/get_post_put_delete.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
