@@ -1,6 +1,6 @@
-const app = require('../app');
-const Category = require('../models/category');
-const connect = require('../mongodb');
+const app = require('../../app');
+const Category = require('../../models/category');
+const connect = require('../../mongodb');
 
 function read(req,res) {
   Category
