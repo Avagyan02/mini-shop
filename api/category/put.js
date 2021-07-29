@@ -1,11 +1,9 @@
 const app = require('../../app');
 const Category = require('../../models/category');
 const connect = require('../../mongodb');
-const {categoryValidation} =  require('../../validations/category_validate');
+const sendSuccesResponse = require('../../helpers');
 
 function update(req,res){
-  const {error} = categoryValidation(req.body)
-  if(!error){
     Category
     .findOneAndUpdate({_id: req.params.id},{  
       $set: {
@@ -14,23 +12,8 @@ function update(req,res){
       nameHy: req.body.nameHy,
       }
     })
-    .then(result =>  {
-      res.status(200).json({
-      "success": true,
-      "message": "Category updated",
-      "data": result
-      })
-    })
-    .catch(() => {
-      res.status(404).json({
-      "success": false,
-      "message": "Not found",
-      "data": null
-      })
-    })
-  }else{
-    res.send('Not correct values');
-  }
+    .then(result => sendSuccesResponse(res, 200, true, 'Category updated', result))
+    .catch(() => sendSuccesResponse(res))
 }
 
 module.exports = update;

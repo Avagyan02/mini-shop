@@ -4,16 +4,17 @@ const readMany = require('./get_many');
 const update = require('./put');
 const delCat = require('./delete');
 const read = require('./get_one');
+const validate = require('../../middlewares/validate_middleware');
 let router = express.Router();
 
 router
   .route('/')
-  .post(create)
+  .post(validate,create)
   .get(readMany);
 
 router
   .route('/:id')
-  .put(update)
+  .put(validate,update)
   .delete(delCat)
   .get(read);
 

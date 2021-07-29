@@ -1,23 +1,12 @@
 const app = require('../../app');
 const Category = require('../../models/category');
 const connect = require('../../mongodb');
+const sendSuccesResponse = require('../../helpers');
 
 function read(req,res) {
-  Category.findOne({_id: req.params.id}).exec((err,cat) => {
-    if(err){
-      res.status(404).json({
-        "success": false,
-        "message": "Not found",
-        "data": null
-      })
-    }else{
-      res.status(200).json({
-        "success": true,
-        "message": "Category details fetched",
-        "data": cat 
-      })
-    }
-  }) 
+  Category.findOne({_id: req.params.id})
+    .then(result => sendSuccesResponse(res, 200, true, 'Category details fetched', result))
+    .catch(() => sendSuccesResponse(res, 500));
 } 
 
 module.exports = read;
