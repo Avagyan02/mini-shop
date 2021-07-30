@@ -11,7 +11,7 @@ function update(req,res){
       nameRu: req.body.nameRu, 
       nameHy: req.body.nameHy,
       }
-    })
+    }, {new: true})
     .then(result => sendSuccesResponse(res, 200, true, 'Category updated', result))
     .catch(() => sendSuccesResponse(res))
 }
