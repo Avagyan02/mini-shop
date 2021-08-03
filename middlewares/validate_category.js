@@ -1,6 +1,7 @@
 const Joi = require('joi');
+const {sendFailedResponse} = require('../helpers');
 
-exports.categoryValidation = (data) => {
+function validateCategory(req,res,next){
   const joiSchema = Joi.object().keys({
     nameEn: Joi.string()
       .min(2)
@@ -17,5 +18,11 @@ exports.categoryValidation = (data) => {
       .max(150)
       .required(),    
   })
-  return joiSchema.validate(data);
+  const {error} = joiSchema.validate(req.body);
+  if(error){
+    return sendFailedResponse(res, error);
+  }
+  next();
 }
+
+module.exports = validateCategory;
