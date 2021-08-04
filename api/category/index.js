@@ -4,10 +4,10 @@ const readMany = require('./services/get_many');
 const update = require('./services/put');
 const delCat = require('./services/delete');
 const read = require('./services/get_one');
-const validate = require('../../middlewares/validate_category');
-const search = require('../../middlewares/search');
+const validate = require('./validations/validate_category');
+const search = require('./validations/find_category');
 const regexpId = require('../../middlewares/veritable_id');
-const validateCategoryList = require('../../middlewares/validate_category_list');
+const validateCategoryList = require('./validations/validate_category_list');
 let router = express.Router();
 
 router

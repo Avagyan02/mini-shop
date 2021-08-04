@@ -1,5 +1,4 @@
-const {sendCustomResponse} = require('../helpers');
-const constStatus = require('../constants/constants');
+const {sendFailedResponse} = require('../utils/responseHelpers');
 
 function testId(req,res,next){
   const Id = req.params.id;
@@ -7,7 +6,7 @@ function testId(req,res,next){
   if(regexpId.test(Id)){
     return next()
   }
-  return sendCustomResponse(res,'Not correct Id', constStatus.STATUS_CODE_NOT_FOUND);
+  return sendFailedResponse(res,'Not correct Id');
 }
 
 module.exports = testId;

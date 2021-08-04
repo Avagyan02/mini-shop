@@ -1,20 +1,32 @@
 const Category = require('../../../models/category');
-const {sendCustomResponse, sendSuccessResponse} = require('../../../helpers');
-const constStatus = require('../../../constants/constants');
+const {sendSuccessResponse, sendErrorResponse, sendFailedResponse} = require('../../../utils/responseHelpers');
 
 function readMany(req,res) {
   Category
   .find({}).count()
-  .then(categoryCount => { 
+  .then(categoryCount => {
     const limit = +req.query.limit;
-    const pageNo = +req.query.pageNo;  
-    if(limit * pageNo <= categoryCount){
+    const pageNo = +req.query.pageNo; 
+    if(!categoryCount){
+      return sendSuccessResponse(res, 'Category list fetched', {
+        count: categoryCount,
+        pageCount: 1,
+        list: []
+      });
+    }
+    
+    const pageCount = Math.ceil(categoryCount / limit);
+    if(pageNo <= pageCount){
       Category
         .find({}, {__v: 0}).skip(Number(req.query.limit) * (Number(req.query.pageNo) - 1)).limit(Number(req.query.limit))
-        .then(result => sendSuccessResponse(res, 'Category list fetched', result))
-        .catch(err => sendCustomResponse(res,err));
+        .then(result => sendSuccessResponse(res, 'Category list fetched', {
+          count: categoryCount,
+          pageCount: 1,
+          list: result 
+        }))
+        .catch(err => sendErrorResponse(res,err));
     }else{
-      sendCustomResponse(res, 'It is not possible to split into so many elements', constStatus.STATUS_CODE_NOT_FOUND)
+      sendFailedResponse(res, 'It is not possible to split into so many elements');
     }
   })
 }

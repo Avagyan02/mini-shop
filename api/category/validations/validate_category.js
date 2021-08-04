@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const {sendFailedResponse} = require('../helpers');
+const {sendFailedResponse} = require('../../../utils/responseHelpers');
 
 function validateCategory(req,res,next){
   const joiSchema = Joi.object().keys({

@@ -1,5 +1,5 @@
 const Category = require('../../../models/category');
-const {sendSuccessResponse,sendCustomResponse} = require('../../../helpers');
+const {sendSuccessResponse, sendErrorResponse} = require('../../../utils/responseHelpers');
 
 function update(req,res){
   Category
@@ -11,7 +11,7 @@ function update(req,res){
       }
     }, {new: true})
     .then(result => sendSuccessResponse(res,"Category updated",result))
-    .catch(err => sendCustomResponse(res,err))
+    .catch(err => sendErrorResponse(res,err))
 }
 
 module.exports = update;
