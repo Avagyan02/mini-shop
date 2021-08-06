@@ -1,5 +1,6 @@
 const Category = require('../../../models/category');
 const {sendSuccessResponse, sendErrorResponse, sendFailedResponse} = require('../../../utils/responseHelpers');
+const HTTP_STATUS_CODE = require('../../../utils/constants');
 
 function readMany(req,res) {
   Category
@@ -14,7 +15,11 @@ function readMany(req,res) {
         list: []
       });
     }
-    
+
+    if(limit < 0 || pageNo < 0){
+      return sendFailedResponse(res, 'Not correct Page and Limit', HTTP_STATUS_CODE.NOT_FOUND);  
+    }
+
     const pageCount = Math.ceil(categoryCount / limit);
     if(pageNo <= pageCount){
       Category
