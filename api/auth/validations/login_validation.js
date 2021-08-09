@@ -3,7 +3,8 @@ const Joi = require('joi');
 
 function userValidate(req, res, next){
   const joiSchema = Joi.object().keys({
-    email: Joi.string().email().required()
+    email: Joi.string().email().required(),
+    password: Joi.string().required()
   })
 
   const {error} = joiSchema.validate(req.body);
