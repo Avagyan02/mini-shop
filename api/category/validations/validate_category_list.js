@@ -10,7 +10,7 @@ function validateCategoryList(req,res,next){
   
   const {error} = joiSchema.validate(req.query);
   if(error){
-    return sendFailedResponse(res, error, HTTP_STATUS_CODE.NOT_FOUND);
+    return sendFailedResponse(res, error, HTTP_STATUS_CODE.BAD_REQUEST);
   }
   return next();
 }

@@ -19,7 +19,7 @@ function readMany(req,res) {
     const pageCount = Math.ceil(categoryCount / limit);
     if(pageNo <= pageCount){
       Category
-        .find({}, {__v: 0}).skip(limit * (pageNo - 1)).limit(req.query.limit)
+        .find({}, {__v: 0}).skip(limit * (pageNo - 1)).limit(limit)
         .then(result => sendSuccessResponse(res, 'Category list fetched', {
           count: categoryCount,
           pageCount: pageCount,
@@ -30,6 +30,7 @@ function readMany(req,res) {
       sendFailedResponse(res, 'It is not possible to split into so many elements');
     }
   })
+  .catch(err => sendErrorResponse(err, res))
 }
 
 module.exports = readMany;

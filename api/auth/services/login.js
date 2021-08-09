@@ -9,7 +9,7 @@ function createUser(req,res){
     .then(result => {
       let pass = bcrypt.compareSync(req.body.password, result.password);
       if(result && pass){
-        sendSuccessResponse(res, "Logged in", {token: generateJwtToken(result._id, result.email, result.password)});
+        sendSuccessResponse(res, "Logged in", {token: generateJwtToken(result._id, result.email)});
       }else{
         sendFailedResponse(res,"Incorrect email or password");
       }

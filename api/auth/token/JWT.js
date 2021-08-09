@@ -1,11 +1,10 @@
 const JWT = require('jsonwebtoken');
 const {secret} = require('./config');
 
-function generateJwtToken(id, email, pass){
+function generateJwtToken(id, email){
   const payload = {
     id,
-    email,
-    pass
+    email
   }
   return JWT.sign(payload, secret);
 }
