@@ -19,10 +19,10 @@ function readMany(req,res) {
     const pageCount = Math.ceil(categoryCount / limit);
     if(pageNo <= pageCount){
       Category
-        .find({}, {__v: 0}).skip(req.query.limit * (req.query.pageNo - 1)).limit(req.query.limit)
+        .find({}, {__v: 0}).skip(limit * (pageNo - 1)).limit(req.query.limit)
         .then(result => sendSuccessResponse(res, 'Category list fetched', {
           count: categoryCount,
-          pageCount: pageNo,
+          pageCount: pageCount,
           list: result 
         }))
         .catch(err => sendErrorResponse(err, res));
