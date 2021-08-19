@@ -1,7 +1,6 @@
 const Users = require('../../../models/user');
 const {sendSuccessResponse,sendFailedResponse,sendErrorResponse} = require('../../../utils/responseHelpers');
 const bcrypt = require('bcrypt');
-const generateJwtToken = require('../token/JWT');
 
 function createUser(req,res){
   Users

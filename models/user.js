@@ -1,6 +1,16 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    trim: true,  
+    required: 'Name is required',
+  },
+  surname: {
+    type: String,
+    trim: true,  
+    required: 'Surname is required',
+  },
   email: {
     type: String,
     trim: true,
@@ -10,7 +20,11 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     trim: true,
-    required: 'Password is required'
+    required: 'Password is required',
+  },
+  telephone: {
+    type: Number,
+    required: 'Telephone is required'
   }
 })
 

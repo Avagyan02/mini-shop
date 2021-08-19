@@ -10,11 +10,11 @@ function authorizeUser(req,res,next){
     if(!token){
       return sendFailedResponse(res, 'Not valid token', HTTP_STATUS_CODE.NOT_AUTHORIZED);
     }else{
-      jwt.verify(token, secret, (err, user) => {
+      jwt.verify(token, secret, (err, payload) => {
         if(err) {
           return sendFailedResponse(res, 'Not valid token', HTTP_STATUS_CODE.NOT_AUTHORIZED);
         }
-        User.findOne(user._id)
+        User.findOne(payload._id)
           .then(() => {
             req.user = user;
             next();
