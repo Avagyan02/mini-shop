@@ -12,6 +12,6 @@ router
 
 router
   .route('/register')
-  .post(validate,mailer,register);
+  .post(validate,register,mailer);
 
 module.exports = router;

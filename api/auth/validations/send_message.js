@@ -2,18 +2,17 @@ const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport(
   {
-    host: "smtp.mail.ru",
+    host: 'smtp.mail.ru',
     port: 465,
     secure: true,
     auth: {
-        user: "samvel.avagyan.02@bk.ru",
-        pass: "IVvcNhZ3YuptkKZXwQ"
+        user: 'test.2002@internet.ru',
+        pass: '1Samvel2002'
     },
-    from: 'Mailer Test <samvel.avagyan.02@bk.ru>',    
+    from: 'Mailer Test <test.2002@internet.ru>',    
   }    
 )
 
-let message = `<div><h1>You registered</h1></div>`
 const mailer = message => {
   transporter.sendMail(message,(err,info) => {
     if(err) return console.log(err);
