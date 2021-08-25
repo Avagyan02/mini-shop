@@ -14,7 +14,7 @@ const router = express.Router();
 router
   .route('/')
   .post(authorizeUser,validate,create)
-  .get(authorizeUser,validateCategoryList,readMany);
+  .get(validateCategoryList,readMany);
 
 router
   .route('/:id')

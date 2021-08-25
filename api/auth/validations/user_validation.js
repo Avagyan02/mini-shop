@@ -5,8 +5,8 @@ function userValidate(req, res, next){
   const joiSchema = Joi.object().keys({
     name: Joi.string().trim().required(),
     surname: Joi.string().trim().required(),
-    email: Joi.string().email().required(),
-    password: Joi.string().required(),
+    email: Joi.string().trim().email().required(),
+    password: Joi.string().trim().required(),
     telephone: Joi.number().integer()
   })
 
