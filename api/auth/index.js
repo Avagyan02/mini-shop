@@ -16,6 +16,6 @@ router
 
 router
   .route('/register/full')
-  .post(registerValidate,fullRegister);
+  .post(registerValidate,fullRegister)
 
 module.exports = router;
