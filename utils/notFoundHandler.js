@@ -1,4 +1,4 @@
-const HTTP_STATUS_CODE = require('./constants');
+const {HTTP_STATUS_CODE} = require('./constants');
 
 function notFound(req,res){
   return res.status(HTTP_STATUS_CODE.NOT_FOUND).send('Page NOT_FOUND')

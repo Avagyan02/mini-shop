@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const HTTP_STATUS_CODE = require('../utils/constants');
+const {HTTP_STATUS_CODE} = require('../utils/constants');
 const {sendFailedResponse} = require('../utils/responseHelpers');
 const {secret} = require('../api/auth/token/config');
 const User = require('../models/user');

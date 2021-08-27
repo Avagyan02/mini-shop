@@ -8,7 +8,7 @@ function fullRegister(req, res){
       let pass = bcrypt.compareSync(req.body.password, result.password);
       if(result.userCode === req.body.code && pass){
         Users.updateOne({_id: result._id}, {$set: {verified: true}})
-          .then(() => sendSuccessResponse(res, 'You are fully registered', true))
+          .then(() => sendSuccessResponse(res, 'User verified', true))
           .catch(err => sendErrorResponse(err, res))
       }else{
         return sendFailedResponse(res, 'Wrong data');

@@ -7,4 +7,12 @@ const HTTP_STATUS_CODE = {
   INTERNAL_SERVER_ERROR : 500
 }
 
-module.exports = HTTP_STATUS_CODE;
+const USER_ROLES = {
+  admin: 1,
+  user: 2
+}
+
+module.exports = {
+  HTTP_STATUS_CODE: HTTP_STATUS_CODE,
+  USER_ROLES: USER_ROLES
+};

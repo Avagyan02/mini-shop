@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const {sendFailedResponse} = require('../../../utils/responseHelpers');
-const HTTP_STATUS_CODE = require('../../../utils/constants');
+const {HTTP_STATUS_CODE}= require('../../../utils/constants');
 
 function validateCategoryList(req,res,next){
   const joiSchema = Joi.object().keys({

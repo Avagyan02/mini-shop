@@ -14,7 +14,6 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     trim: true,
-    unique: true,
     required: 'Email address is required',
   },
   password: {
@@ -32,7 +31,15 @@ const userSchema = new mongoose.Schema({
   },
   userCode: {
     type: String,
-    required: true,
+    required: true
+  },
+  registerOf: {
+    type: Date,
+    default: Date.now()
+  },
+  role: {
+    type: Number,
+    required: true
   }
 })
 

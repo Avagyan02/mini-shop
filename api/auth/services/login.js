@@ -1,6 +1,7 @@
 const Users = require('../../../models/user');
 const {sendSuccessResponse,sendFailedResponse,sendErrorResponse} = require('../../../utils/responseHelpers');
 const bcrypt = require('bcrypt');
+const generateUserToken = require('../token/JWT');
 
 function createUser(req,res){
   Users
@@ -8,8 +9,8 @@ function createUser(req,res){
     .then(result => {
       let pass = bcrypt.compareSync(req.body.password, result.password);
       if(result && pass){
-        sendSuccessResponse(res, "Logged in", result);
-      }else{
+        sendSuccessResponse(res, "Logged in", generateUserToken(result._id, result.email));
+      } else {
         sendFailedResponse(res,"Incorrect email or password");
       }
     })

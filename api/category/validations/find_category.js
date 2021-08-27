@@ -1,4 +1,4 @@
-const HTTP_STATUS_CODE = require('../../../utils/constants');
+const {HTTP_STATUS_CODE} = require('../../../utils/constants');
 const Category = require('../../../models/category');
 const {sendFailedResponse,sendErrorResponse} = require('../../../utils/responseHelpers')
 

@@ -1,6 +1,6 @@
 const Category = require('../../../models/category');
 const {sendSuccessResponse, sendErrorResponse, sendFailedResponse} = require('../../../utils/responseHelpers');
-const HTTP_STATUS_CODE = require('../../../utils/constants');
+const {HTTP_STATUS_CODE} = require('../../../utils/constants');
 
 function readMany(req,res) {
   Category

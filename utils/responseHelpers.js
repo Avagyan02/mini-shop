@@ -1,4 +1,4 @@
-const HTTP_STATUS_CODE = require('./constants');
+const {HTTP_STATUS_CODE} = require('./constants');
 
 function sendSuccessResponse(res, message, result) {
   res.status(HTTP_STATUS_CODE.SUCCESS).json({
