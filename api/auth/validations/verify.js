@@ -1,11 +1,10 @@
 const {sendFailedResponse} = require('../../../utils/responseHelpers');
 const Joi = require('joi');
 
-function registerValidate(req, res, next){
+function verifyValidate(req, res, next){
     const joiSchema = Joi.object().keys({
       email: Joi.string().trim().email().required(),
-      password: Joi.string().trim().required(),
-      code: Joi.string().trim().required(),
+      code: Joi.number().integer().required(),
     })
   
     const {error} = joiSchema.validate(req.body);
@@ -15,4 +14,4 @@ function registerValidate(req, res, next){
     next();
   }
   
-  module.exports = registerValidate;
+  module.exports = verifyValidate;

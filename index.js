@@ -1,8 +1,8 @@
 const app = require('./app');
 const http = require('http');
-const getUsers = require('./utils/createAdminUser');
+const createAdmin = require('./utils/createAdminUser');
 require('./mongodb');
 
 http
-  .createServer(app, getUsers())
+  .createServer(app, createAdmin())
   .listen(3000, () => console.log('Server run'));

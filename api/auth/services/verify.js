@@ -2,11 +2,10 @@ const Users = require('../../../models/user');
 const bcrypt = require('bcrypt');
 const {sendSuccessResponse,sendFailedResponse,sendErrorResponse} = require('../../../utils/responseHelpers');
 
-function fullRegister(req, res){
+function verifyUser(req, res){
   Users.findOne({email: req.body.email})
     .then(result => {
-      let pass = bcrypt.compareSync(req.body.password, result.password);
-      if(result.userCode === req.body.code && pass){
+      if(result.userCode === req.body.code){
         Users.updateOne({_id: result._id}, {$set: {verified: true}})
           .then(() => sendSuccessResponse(res, 'User verified', true))
           .catch(err => sendErrorResponse(err, res))
@@ -17,4 +16,4 @@ function fullRegister(req, res){
     .catch(err => sendErrorResponse(err, res));
 }
 
-module.exports = fullRegister;
+module.exports = verifyUser;

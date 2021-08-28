@@ -1,18 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const create = require('./services/login');
-const validate = require('./validations/user_validation');
+const loginValidate = require('./validations/login');
+const login = require('./services/login');
+const registerValidate = require('./validations/register');
 const register = require('./services/register');
-const registerValidate = require('./validations/register_validation');
-const fullRegister = require('./services/full_registration');
+const verifyValidate = require('./validations/verify');
+const verify = require('./services/verify');
 
 router
-  .post('/login', validate, create);
+  .post('/login', loginValidate, login);
 
 router
-  .post('/register', validate, register);
+  .post('/register', registerValidate, register);
 
 router
-  .post('/verify', registerValidate, fullRegister);
+  .post('/verify', verifyValidate, verify);
 
 module.exports = router;

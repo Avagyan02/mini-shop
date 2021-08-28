@@ -6,7 +6,7 @@ const mailer = require('../../../utils/send_message');
 const {USER_ROLES} = require('../../../utils/constants');
 
 function register(req,res){
-  const code = getRandomCode('asdfghjk', 5);
+  const code = getRandomCode('0123456789', 5);
   const message = {
     to: req.body.email,
     html: `<h1>You registered</h1>
@@ -15,28 +15,45 @@ function register(req,res){
 
   Users.findOne({email: req.body.email})
     .then(result => {
-      if (!result.verified) {
-      Users.updateOne({_id: result._id}, {$set: {name: req.body.name, surname: req.body.surname,
-        password: bcrypt.hashSync(req.body.password, 10),telephone: req.body.telephone,userCode: code}})
-        .then(() => {
-          sendSuccessResponse(res, 'User updated', true);
-          mailer(message);
-        })
-        .catch(err => sendErrorResponse(err, res))
+      if (!result) {
+        Users.create(
+          {
+          name: req.body.name, 
+          surname: req.body.surname, 
+          email: req.body.email, 
+          password: bcrypt.hashSync(req.body.password, 10), 
+          telephone: req.body.telephone, 
+          userCode: code, 
+          role: USER_ROLES.user
+          }
+        )
+          .then(() => {
+            sendSuccessResponse(res, 'User created', true);
+            mailer(message);
+          })
+          .catch(err => sendErrorResponse(err, res))
       } else {
-        return sendFailedResponse(res, 'User verified');
+        if (!result.verified) {
+          Users.updateOne(
+            {_id: result._id}, 
+            {$set: {
+              name: req.body.name, 
+              surname: req.body.surname,
+              password: bcrypt.hashSync(req.body.password, 10),
+              telephone: req.body.telephone,userCode: code
+              }
+            })
+            .then(() => {
+              sendSuccessResponse(res, 'User updated', true);
+              mailer(message);
+            })
+            .catch(err => sendErrorResponse(err, res))
+        } else {
+            return sendFailedResponse(res, 'User verified');
+        }
       }
     })
-    .catch(() => {
-      Users.create({name: req.body.name, surname: req.body.surname, email: req.body.email, 
-        password: bcrypt.hashSync(req.body.password, 10), telephone: req.body.telephone, 
-        userCode: code, role: USER_ROLES.user})
-        .then(() => {
-          sendSuccessResponse(res, 'User created', true);
-          mailer(message);
-        })
-        .catch(err => sendErrorResponse(err, res))
-    })
+    .catch(err => sendErrorResponse(err, res))
 }
 
 module.exports = register;

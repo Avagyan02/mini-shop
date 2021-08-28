@@ -30,8 +30,8 @@ const userSchema = new mongoose.Schema({
     default: false
   },
   userCode: {
-    type: String,
-    required: true
+    type: Number,
+    default: null
   },
   registerOf: {
     type: Date,
