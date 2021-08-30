@@ -1,13 +1,12 @@
 const Users = require('../models/user');
 const {sendErrorResponse} = require('./responseHelpers');
 const bcrypt = require('bcrypt');
-const getRandomCode = require('./get_code');
 const {USER_ROLES} = require('./constants');
 
-function createAdmin(req, res){
-  Users.countDocuments()
-    .then(usersCount => {
-      if(!usersCount){
+function adminsCount(req, res){
+  Users.findOne({role: 1})
+    .then(result => {
+      if(!result){
       Users.create({
         name: 'Samvel', 
         surname: 'Avagyan', 
@@ -23,4 +22,4 @@ function createAdmin(req, res){
     .catch(err => sendErrorResponse(err, res));
 }
 
-module.exports = createAdmin;
+module.exports = adminsCount;
