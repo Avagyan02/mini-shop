@@ -28,7 +28,7 @@ function register(req,res){
           }
         )
           .then(() => {
-            sendSuccessResponse(res, 'User created', true);
+            sendSuccessResponse(res, 'User created');
             mailer(message);
           })
           .catch(err => sendErrorResponse(err, res))
@@ -44,7 +44,7 @@ function register(req,res){
               }
             })
             .then(() => {
-              sendSuccessResponse(res, 'User updated', true);
+              sendSuccessResponse(res, 'User updated');
               mailer(message);
             })
             .catch(err => sendErrorResponse(err, res))

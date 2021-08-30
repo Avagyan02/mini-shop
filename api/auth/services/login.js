@@ -5,11 +5,13 @@ const generateUserToken = require('../token/JWT');
 
 function createUser(req,res){
   Users
-    .findOne({email: req.body.email})
+    .findOne({email: req.body.email, password: req.body.password})
     .then(result => {
-      let pass = bcrypt.compareSync(req.body.password, result.password);
-      if(result && pass){
-        sendSuccessResponse(res, "Logged in", generateUserToken(result._id, result.email));
+      if(result){
+        let pass = bcrypt.compareSync(req.body.password, result.password);
+        if(pass){
+          sendSuccessResponse(res, "Logged in", generateUserToken(result._id, result.email));
+        }
       } else {
         sendFailedResponse(res,"Incorrect email or password");
       }

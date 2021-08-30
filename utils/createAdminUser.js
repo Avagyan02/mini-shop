@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const {USER_ROLES} = require('./constants');
 
 function adminsCount(req, res){
-  Users.findOne({role: 1})
+  Users.findOne({role: USER_ROLES.admin})
     .then(result => {
       if(!result){
       Users.create({

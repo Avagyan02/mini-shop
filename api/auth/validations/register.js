@@ -7,7 +7,7 @@ function registerValidate(req, res, next){
     surname: Joi.string().trim().required(),
     email: Joi.string().trim().email().required(),
     password: Joi.string().trim().required(),
-    telephone: Joi.number().integer()
+    telephone: Joi.number().integer().required()
   })
 
   const {error} = joiSchema.validate(req.body);

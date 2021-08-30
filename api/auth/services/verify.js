@@ -7,7 +7,7 @@ function verifyUser(req, res){
     .then(result => {
       if(result){
         Users.updateOne({_id: result._id}, {$set: {verified: true}})
-          .then(() => sendSuccessResponse(res, 'User verified', true))
+          .then(() => sendSuccessResponse(res, 'User verified'))
           .catch(err => sendErrorResponse(err, res))
       }else{
         return sendFailedResponse(res, 'Wrong data');
