@@ -1,7 +1,7 @@
 const JWT = require('jsonwebtoken');
 const {secret} = require('./config');
 
-function generateJwtToken(id, email){
+function generateJwtToken(id, email){ // (user)
   const payload = {
     id,
     email

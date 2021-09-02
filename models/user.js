@@ -33,9 +33,13 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: null
   },
-  registerOf: {
+  restoreCode: {
+    type: Number,
+    default: null
+  },
+  registerDt: {
     type: Date,
-    default: Date.now()
+    default: Date.now
   },
   role: {
     type: Number,

@@ -10,7 +10,7 @@ function register(req,res){
   const message = {
     to: req.body.email,
     html: `<h1>You registered</h1>
-          <h3>To pass full verification use this code ${code}</h3>`
+          <h3>To pass full verification use this code. ${code}</h3>`
   };
 
   Users.findOne({email: req.body.email})

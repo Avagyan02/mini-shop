@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt');
 const generateUserToken = require('../token/JWT');
 
 function createUser(req,res){
+  let message = "Incorrect email or password";
+  
   Users
     .findOne({email: req.body.email})
     .then(result => {
@@ -13,13 +15,13 @@ function createUser(req,res){
           if(pass){
             sendSuccessResponse(res, "Logged in", generateUserToken(result._id, result.email));
           }else{
-            sendFailedResponse(res,"Incorrect email or password");
+            sendFailedResponse(res, message);
           }
         }else{
           sendFailedResponse(res,"Go through full verification");
         }
       } else {
-        sendFailedResponse(res,"Incorrect email or password");
+        sendFailedResponse(res, message);
       }
     })
     .catch(err => sendErrorResponse(err, res))
