@@ -1,0 +1,18 @@
+const HTTP_STATUS_CODE = {
+  SUCCESS: 200,
+  BAD_REQUEST: 400,
+  NOT_AUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  INTERNAL_SERVER_ERROR: 500,
+};
+
+const USER_ROLES = {
+  admin: 1,
+  user: 2,
+};
+
+module.exports = {
+  HTTP_STATUS_CODE,
+  USER_ROLES,
+};
