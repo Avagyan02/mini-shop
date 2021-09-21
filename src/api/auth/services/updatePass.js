@@ -1,19 +1,24 @@
-const bcrypt = require('bcrypt');
-const Users = require('../../../models/user');
-const { sendSuccessResponse, sendFailedResponse, sendErrorResponse } = require('../../../utils/responseHelpers');
+import bcrypt from 'bcrypt';
+import Users from '../../../models/user';
+import { sendSuccessResponse, sendFailedResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
-function updatePass(req, res) {
-  Users.findOne({ email: req.body.email, restoreCode: req.body.code })
-    .then((result) => {
-      if (result) {
-        Users.updateOne({ _id: result._id }, { $set: { password: bcrypt.hashSync(req.body.password, 10) } })
-          .then(() => sendSuccessResponse(res, 'Password updated'))
-          .catch((err) => sendErrorResponse(err, res));
-      } else {
-        sendFailedResponse(res, 'Wrong email or code');
+async function updatePass(req, res) {
+  try {
+    const user = await Users.findOne({ email: req.body.email, restoreCode: req.body.code });
+    if (user) {
+      try {
+        const userUpdate = await Users.updateOne({ _id: user._id }, { $set: { password: bcrypt.hashSync(req.body.password, 10) } });
+        if (userUpdate) {
+          sendSuccessResponse(res, 'Password updated');
+        }
+      } catch (error) {
+        sendErrorResponse(error, res);
       }
-    })
-    .catch((err) => sendErrorResponse(err, res));
+    } else {
+      sendFailedResponse(res, 'Wrong email or code');
+    }
+  } catch (error) {
+    sendErrorResponse(error, res);
+  }
 }
-
-module.exports = updatePass;
+export default updatePass;

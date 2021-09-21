@@ -1,8 +1,8 @@
-const jwt = require('jsonwebtoken');
-const { HTTP_STATUS_CODE } = require('../utils/constants');
-const { sendFailedResponse } = require('../utils/responseHelpers');
-const { secret } = require('../api/auth/token/config');
-const User = require('../models/user');
+import jwt from 'jsonwebtoken';
+import { HTTP_STATUS_CODE } from '../utils/constants';
+import { sendFailedResponse, sendErrorResponse } from '../utils/responseHelpers';
+import secret from '../api/auth/token/config';
+import findByPayload from '../utils/findByPayload';
 
 function authorizeUser(req, res, next) {
   const message = 'Not valid token';
@@ -16,16 +16,11 @@ function authorizeUser(req, res, next) {
       if (err) {
         return sendFailedResponse(res, message, HTTP_STATUS_CODE.NOT_AUTHORIZED);
       }
-      User.findOne(payload._id)
-        .then((user) => {
-          req.user = user;
-          next();
-        })
-        .catch(() => sendFailedResponse(res, 'No registered user', HTTP_STATUS_CODE.NOT_AUTHORIZED));
+      findByPayload(req, res, next, payload.id);
     });
   } else {
     sendFailedResponse(res, 'User is not logged in', HTTP_STATUS_CODE.NOT_AUTHORIZED);
   }
 }
 
-module.exports = authorizeUser;
+export default authorizeUser;

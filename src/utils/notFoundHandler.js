@@ -1,7 +1,7 @@
-const { HTTP_STATUS_CODE } = require('./constants');
+import { HTTP_STATUS_CODE } from './constants';
 
 function notFound(req, res) {
   return res.status(HTTP_STATUS_CODE.NOT_FOUND).send('Page NOT_FOUND');
 }
 
-module.exports = notFound;
+export default notFound;

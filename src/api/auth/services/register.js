@@ -1,22 +1,23 @@
-const bcrypt = require('bcrypt');
-const Users = require('../../../models/user');
-const { sendSuccessResponse, sendFailedResponse, sendErrorResponse } = require('../../../utils/responseHelpers');
-const getRandomCode = require('../../../utils/get_code');
-const mailer = require('../../../utils/send_message');
-const { USER_ROLES } = require('../../../utils/constants');
+import bcrypt from 'bcrypt';
+import Users from '../../../models/user';
+import { sendSuccessResponse, sendFailedResponse, sendErrorResponse } from '../../../utils/responseHelpers';
+import getRandomCode from '../../../utils/get_code';
+import mailer from '../../../utils/send_message';
+import { USER_ROLES } from '../../../utils/constants';
 
-function register(req, res) {
-  const code = getRandomCode('0123456789', 5);
-  const message = {
-    to: req.body.email,
-    html: `<h1>You registered</h1>
-          <h3>To pass full verification use this code. ${code}</h3>`,
-  };
+async function register(req, res) {
+  try {
+    const code = getRandomCode('0123456789', 5);
+    const message = {
+      to: req.body.email,
+      html: `<h1>You registered</h1>
+            <h3>To pass full verification use this code. ${code}</h3>`,
+    };
 
-  Users.findOne({ email: req.body.email })
-    .then((result) => {
-      if (!result) {
-        Users.create(
+    const findUser = await Users.findOne({ email: req.body.email });
+    if (!findUser) {
+      try {
+        const user = await Users.create(
           {
             name: req.body.name,
             surname: req.body.surname,
@@ -26,15 +27,18 @@ function register(req, res) {
             userCode: code,
             role: USER_ROLES.user,
           },
-        )
-          .then(() => {
-            sendSuccessResponse(res, 'User created');
-            mailer(message);
-          })
-          .catch((err) => sendErrorResponse(err, res));
-      } else if (!result.verified) {
-        Users.updateOne(
-          { _id: result._id },
+        );
+        if (user) {
+          sendSuccessResponse(res, 'User created');
+          mailer(message);
+        }
+      } catch (error) {
+        sendErrorResponse(error, res);
+      }
+    } else if (!findUser.verified) {
+      try {
+        const updateUser = await Users.updateOne(
+          { _id: findUser._id },
           {
             $set: {
               name: req.body.name,
@@ -44,17 +48,20 @@ function register(req, res) {
               userCode: code,
             },
           },
-        )
-          .then(() => {
-            sendSuccessResponse(res, 'User updated');
-            mailer(message);
-          })
-          .catch((err) => sendErrorResponse(err, res));
-      } else {
-        sendFailedResponse(res, 'User verified');
+        );
+        if (updateUser) {
+          sendSuccessResponse(res, 'User updated');
+          mailer(message);
+        }
+      } catch (error) {
+        sendErrorResponse(error, res);
       }
-    })
-    .catch((err) => sendErrorResponse(err, res));
+    } else {
+      sendFailedResponse(res, 'User verified');
+    }
+  } catch (error) {
+    sendErrorResponse(error, res);
+  }
 }
 
-module.exports = register;
+export default register;

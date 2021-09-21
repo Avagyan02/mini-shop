@@ -1,14 +1,14 @@
-const express = require('express');
-const create = require('./services/post');
-const readMany = require('./services/get_many');
-const update = require('./services/put');
-const delCat = require('./services/delete');
-const read = require('./services/get_one');
-const validate = require('./validations/validate_category');
-const search = require('./validations/find_category');
-const regexpId = require('../../middlewares/veritable_id');
-const validateCategoryList = require('./validations/validate_category_list');
-const authorizeUser = require('../../middlewares/authorizeUser');
+import express from 'express';
+import create from './services/post';
+import readMany from './services/get_many';
+import update from './services/put';
+import delCat from './services/delete';
+import read from './services/get_one';
+import validate from './validations/validate_category';
+import search from './validations/find_category';
+import regexpId from '../../middlewares/veritable_id';
+import validateCategoryList from './validations/validate_category_list';
+import authorizeUser from '../../middlewares/authorizeUser';
 
 const router = express.Router();
 
@@ -23,4 +23,4 @@ router
   .delete(authorizeUser, regexpId, search, delCat)
   .get(regexpId, search, read);
 
-module.exports = router;
+export default router;

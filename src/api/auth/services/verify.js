@@ -1,18 +1,24 @@
-const Users = require('../../../models/user');
-const { sendSuccessResponse, sendFailedResponse, sendErrorResponse } = require('../../../utils/responseHelpers');
+import Users from '../../../models/user';
+import { sendSuccessResponse, sendFailedResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
-function verifyUser(req, res) {
-  Users.findOne({ email: req.body.email, verified: false, userCode: req.body.code })
-    .then((result) => {
-      if (result) {
-        Users.updateOne({ _id: result._id }, { $set: { verified: true } })
-          .then(() => sendSuccessResponse(res, 'User verified'))
-          .catch((err) => sendErrorResponse(err, res));
-      } else {
-        sendFailedResponse(res, 'Wrong data');
+async function verifyUser(req, res) {
+  try {
+    const user = await Users.findOne({ email: req.body.email, verified: false, userCode: req.body.code });
+    if (user) {
+      try {
+        const userUpdate = await Users.updateOne({ _id: user._id }, { $set: { verified: true } });
+        if (userUpdate) {
+          sendSuccessResponse(res, 'User verified');
+        }
+      } catch (error) {
+        sendErrorResponse(error, res);
       }
-    })
-    .catch((err) => sendErrorResponse(err, res));
+    } else {
+      sendFailedResponse(res, 'Wrong data');
+    }
+  } catch (error) {
+    sendErrorResponse(error, res);
+  }
 }
 
-module.exports = verifyUser;
+export default verifyUser;

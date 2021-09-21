@@ -1,16 +1,16 @@
-const express = require('express');
+import express from 'express';
+import loginValidate from './validations/login';
+import login from './services/login';
+import registerValidate from './validations/register';
+import register from './services/register';
+import verifyValidate from './validations/verify';
+import verify from './services/verify';
+import validateRestore from './validations/restore';
+import restore from './services/restore';
+import validateUpdatePass from './validations/updatePass';
+import updatePass from './services/updatePass';
 
 const router = express.Router();
-const loginValidate = require('./validations/login');
-const login = require('./services/login');
-const registerValidate = require('./validations/register');
-const register = require('./services/register');
-const verifyValidate = require('./validations/verify');
-const verify = require('./services/verify');
-const validateRestore = require('./validations/restore');
-const restore = require('./services/restore');
-const validateUpdatePass = require('./validations/updatePass');
-const updatePass = require('./services/updatePass');
 
 router
   .post('/login', loginValidate, login);
@@ -27,4 +27,4 @@ router
 router
   .post('/restore/verify', validateUpdatePass, updatePass);
 
-module.exports = router;
+export default router;

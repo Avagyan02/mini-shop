@@ -1,4 +1,4 @@
-const HTTP_STATUS_CODE = {
+export const HTTP_STATUS_CODE = {
   SUCCESS: 200,
   BAD_REQUEST: 400,
   NOT_AUTHORIZED: 401,
@@ -7,12 +7,7 @@ const HTTP_STATUS_CODE = {
   INTERNAL_SERVER_ERROR: 500,
 };
 
-const USER_ROLES = {
+export const USER_ROLES = {
   admin: 1,
   user: 2,
-};
-
-module.exports = {
-  HTTP_STATUS_CODE,
-  USER_ROLES,
 };

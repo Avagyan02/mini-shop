@@ -1,11 +1,15 @@
-const Category = require('../../../models/category');
-const { sendSuccessResponse, sendErrorResponse } = require('../../../utils/responseHelpers');
+import Category from '../../../models/category';
+import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
-function delCat(req, res) {
-  Category
-    .findOneAndDelete({ _id: req.params.id })
-    .then(() => sendSuccessResponse(res, 'Category deleted', null))
-    .catch((err) => sendErrorResponse(res, err));
+async function delCat(req, res) {
+  try {
+    const category = await Category.findOneAndDelete({ _id: req.params.id });
+    if (category) {
+      sendSuccessResponse(res, 'Category deleted', null);
+    }
+  } catch (error) {
+    sendErrorResponse(error, res);
+  }
 }
 
-module.exports = delCat;
+export default delCat;

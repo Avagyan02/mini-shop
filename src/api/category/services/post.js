@@ -1,11 +1,15 @@
-const Category = require('../../../models/category');
-const { sendSuccessResponse, sendErrorResponse } = require('../../../utils/responseHelpers');
+import Category from '../../../models/category';
+import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
-function create(req, res) {
-  Category
-    .create({ nameEn: req.body.nameEn, nameRu: req.body.nameRu, nameHy: req.body.nameHy })
-    .then((result) => sendSuccessResponse(res, 'Category created', result))
-    .catch((err) => sendErrorResponse(res, err));
+async function create(req, res) {
+  try {
+    const category = await Category.create({ nameEn: req.body.nameEn, nameRu: req.body.nameRu, nameHy: req.body.nameHy });
+    if (category) {
+      sendSuccessResponse(res, 'Category created', category);
+    }
+  } catch (error) {
+    sendErrorResponse(error, res);
+  }
 }
 
-module.exports = create;
+export default create;

@@ -12,4 +12,4 @@ function getRandomCode(str, length) {
   return result;
 }
 
-module.exports = getRandomCode;
+export default getRandomCode;

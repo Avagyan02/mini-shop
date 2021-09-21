@@ -1,5 +1,5 @@
-const Joi = require('joi');
-const { sendFailedResponse } = require('../../../utils/responseHelpers');
+import Joi from 'joi';
+import { sendFailedResponse } from '../../../utils/responseHelpers';
 
 function verifyValidate(req, res, next) {
   const joiSchema = Joi.object().keys({
@@ -14,4 +14,4 @@ function verifyValidate(req, res, next) {
   next();
 }
 
-module.exports = verifyValidate;
+export default verifyValidate;

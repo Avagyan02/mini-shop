@@ -1,8 +1,7 @@
-const http = require('http');
-const app = require('./app');
-const adminsCount = require('./utils/createAdminUser');
-require('./mongodb');
+import http from 'http';
+import app from './app.js';
+import connect from './mongodb';
 
 http
-  .createServer(app, adminsCount())
+  .createServer(app, connect())
   .listen(3000, () => console.log('Server run'));

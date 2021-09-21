@@ -1,17 +1,21 @@
-const Category = require('../../../models/category');
-const { sendSuccessResponse, sendErrorResponse } = require('../../../utils/responseHelpers');
+import Category from '../../../models/category';
+import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
-function update(req, res) {
-  Category
-    .findOneAndUpdate({ _id: req.params.id }, {
+async function update(req, res) {
+  try {
+    const category = await Category.findOneAndUpdate({ _id: req.params.id }, {
       $set: {
         nameEn: req.body.nameEn,
         nameRu: req.body.nameRu,
         nameHy: req.body.nameHy,
       },
-    }, { new: true })
-    .then((result) => sendSuccessResponse(res, 'Category updated', result))
-    .catch((err) => sendErrorResponse(res, err));
+    }, { new: true });
+    if (category) {
+      sendSuccessResponse(res, 'Category updated', category);
+    }
+  } catch (error) {
+    sendErrorResponse(error, res);
+  }
 }
 
-module.exports = update;
+export default update;

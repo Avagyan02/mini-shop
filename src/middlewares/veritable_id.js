@@ -1,12 +1,12 @@
-const { sendFailedResponse } = require('../utils/responseHelpers');
+import { sendFailedResponse } from '../utils/responseHelpers';
 
 function testId(req, res, next) {
   const Id = req.params.id;
   const regexpId = /^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i;
-  if (regexpId.test(Id)) {
-    return next();
+  if (!regexpId.test(Id)) {
+    return sendFailedResponse(res, 'Not correct Id');
   }
-  return sendFailedResponse(res, 'Not correct Id');
+  next();
 }
 
-module.exports = testId;
+export default testId;

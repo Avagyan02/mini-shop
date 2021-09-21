@@ -3,16 +3,20 @@
   "version": "1.0.0",
   "description": "",
   "main": "",
+  "target": "esnext",
   "scripts": {
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
-    "start": "node ./src/index.js",
-    "dev": "nodemon ./src/index.js"
+    "dev": "nodemon --experimental-modules --es-module-specifier-resolution=node ./src/index.js",
+    "build": "babel ./src -d dist",
+    "start": "npm run build && node dist/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "type": "module",
   "dependencies": {
+    "@babel/node": "^7.15.4",
     "bcrypt": "^5.0.1",
     "bluebird": "^3.7.2",
     "body-parser": "^1.19.0",
@@ -26,6 +30,9 @@
     "prettier": "^2.4.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.5",
+    "@babel/preset-env": "^7.15.6",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^8.3.0",

@@ -1,30 +1,30 @@
-const bcrypt = require('bcrypt');
-const Users = require('../../../models/user');
-const { sendSuccessResponse, sendFailedResponse, sendErrorResponse } = require('../../../utils/responseHelpers');
-const generateUserToken = require('../token/JWT');
+import bcrypt from 'bcrypt';
+import Users from '../../../models/user';
+import generateUserToken from '../token/JWT';
+import { sendSuccessResponse, sendFailedResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
-function createUser(req, res) {
-  const message = 'Incorrect email or password';
-
-  Users
-    .findOne({ email: req.body.email })
-    .then((result) => {
-      if (result) {
-        if (result.verified) {
-          const pass = bcrypt.compareSync(req.body.password, result.password);
-          if (pass) {
-            sendSuccessResponse(res, 'Logged in', generateUserToken(result._id, result.email));
-          } else {
-            sendFailedResponse(res, message);
-          }
+async function createUser(req, res) {
+  try {
+    const message = 'Incorrect email or password';
+    const user = await Users.findOne({ email: req.body.email });
+    console.log(user);
+    if (user) {
+      if (user.verified) {
+        const pass = bcrypt.compareSync(req.body.password, user.password);
+        if (pass) {
+          sendSuccessResponse(res, 'Logged in', generateUserToken(user._id, user.email));
         } else {
-          sendFailedResponse(res, 'Go through full verification');
+          sendFailedResponse(res, message);
         }
       } else {
-        sendFailedResponse(res, message);
+        sendFailedResponse(res, 'Go through full verification');
       }
-    })
-    .catch((err) => sendErrorResponse(err, res));
+    } else {
+      sendFailedResponse(res, message);
+    }
+  } catch (error) {
+    sendErrorResponse(error, res);
+  }
 }
 
-module.exports = createUser;
+export default createUser;

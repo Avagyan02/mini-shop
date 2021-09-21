@@ -1,16 +1,17 @@
-const { HTTP_STATUS_CODE } = require('../../../utils/constants');
-const Category = require('../../../models/category');
-const { sendFailedResponse, sendErrorResponse } = require('../../../utils/responseHelpers');
+import { HTTP_STATUS_CODE } from '../../../utils/constants';
+import Category from '../../../models/category';
+import { sendFailedResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
-function searchCategory(req, res, next) {
-  Category.findOne({ _id: req.params.id })
-    .then((data) => {
-      if (!data) {
-        return sendFailedResponse(res, 'Not Found', HTTP_STATUS_CODE.NOT_FOUND);
-      }
-      return next();
-    })
-    .catch((err) => sendErrorResponse(err, res));
+async function searchCategory(req, res, next) {
+  try {
+    const category = await Category.findOne({ _id: req.params.id });
+    if (!category) {
+      return sendFailedResponse(res, 'Not Found', HTTP_STATUS_CODE.NOT_FOUND);
+    }
+    next();
+  } catch (error) {
+    sendErrorResponse(error, res);
+  }
 }
 
-module.exports = searchCategory;
+export default searchCategory;

@@ -1,12 +1,12 @@
-const JWT = require('jsonwebtoken');
-const { secret } = require('./config');
+import JWT from 'jsonwebtoken';
+import secret from './config';
 
-function generateJwtToken(id, email) { // (user)
+function generateJwtToken(id, email) {
   const payload = {
     id,
     email,
   };
-  return JWT.sign(payload, secret);
+  return JWT.sign(payload, secret.key);
 }
 
-module.exports = generateJwtToken;
+export default generateJwtToken;

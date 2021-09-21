@@ -8,6 +8,13 @@
     "consistent-return": "off",
     "no-underscore-dangle": "off",
     "max-len": "off",
-    "no-plusplus": "off"
+    "no-plusplus": "off",
+    "import/prefer-default-export": "off",
+    "no-unused-vars": "off",
+    "no-else-return": "off",
+    "no-use-before-define": "off",
+    "import/named": "off",
+    "import/extensions": "off"
+
   }
 }

@@ -1,10 +1,15 @@
-const Category = require('../../../models/category');
-const { sendSuccessResponse, sendErrorResponse } = require('../../../utils/responseHelpers');
+import Category from '../../../models/category';
+import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
-function read(req, res) {
-  Category.findOne({ _id: req.params.id })
-    .then((result) => sendSuccessResponse(res, 'Category details fetched', result))
-    .catch((err) => sendErrorResponse(res, err));
+async function read(req, res) {
+  try {
+    const category = await Category.findOne({ _id: req.params.id });
+    if (category) {
+      sendSuccessResponse(res, 'Category details fetched', category);
+    }
+  } catch (error) {
+    sendErrorResponse(error, res);
+  }
 }
 
-module.exports = read;
+export default read;

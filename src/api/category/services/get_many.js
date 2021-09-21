@@ -1,35 +1,39 @@
-const Category = require('../../../models/category');
-const { sendSuccessResponse, sendErrorResponse, sendFailedResponse } = require('../../../utils/responseHelpers');
+import Category from '../../../models/category';
+import { sendSuccessResponse, sendErrorResponse, sendFailedResponse } from '../../../utils/responseHelpers';
 
-function readMany(req, res) {
-  Category
-    .countDocuments()
-    .then((categoryCount) => {
-      const limit = +req.query.limit;
-      const pageNo = +req.query.pageNo;
-      if (!categoryCount) {
-        return sendSuccessResponse(res, 'Category list fetched', {
-          count: categoryCount,
-          pageCount: 1,
-          list: [],
-        });
-      }
+async function readMany(req, res) {
+  try {
+    const categoryCount = await Category.countDocuments();
+    const limit = +req.query.limit;
+    const pageNo = +req.query.pageNo;
+    if (!categoryCount) {
+      sendSuccessResponse(res, 'Category list fetched', {
+        count: categoryCount,
+        pageCount: 1,
+        list: [],
+      });
+    }
 
-      const pageCount = Math.ceil(categoryCount / limit);
-      if (pageNo <= pageCount) {
-        Category
-          .find({}, { __v: 0 }).skip(limit * (pageNo - 1)).limit(limit)
-          .then((result) => sendSuccessResponse(res, 'Category list fetched', {
+    const pageCount = Math.ceil(categoryCount / limit);
+    if (pageNo <= pageCount) {
+      try {
+        const category = await Category.find({}, { __v: 0 }).skip(limit * (pageNo - 1)).limit(limit);
+        if (category) {
+          sendSuccessResponse(res, 'Category list fetched', {
             count: categoryCount,
             pageCount,
-            list: result,
-          }))
-          .catch((err) => sendErrorResponse(err, res));
-      } else {
-        sendFailedResponse(res, 'It is not possible to split into so many elements');
+            list: category,
+          });
+        }
+      } catch (error) {
+        sendErrorResponse(error, res);
       }
-    })
-    .catch((err) => sendErrorResponse(err, res));
+    } else {
+      sendFailedResponse(res, 'It is not possible to split into so many elements');
+    }
+  } catch (error) {
+    sendErrorResponse(error, res);
+  }
 }
 
-module.exports = readMany;
+export default readMany;

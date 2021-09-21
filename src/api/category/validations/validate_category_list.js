@@ -1,6 +1,6 @@
-const Joi = require('joi');
-const { sendFailedResponse } = require('../../../utils/responseHelpers');
-const { HTTP_STATUS_CODE } = require('../../../utils/constants');
+import Joi from 'joi';
+import { sendFailedResponse } from '../../../utils/responseHelpers';
+import { HTTP_STATUS_CODE } from '../../../utils/constants';
 
 function validateCategoryList(req, res, next) {
   const joiSchema = Joi.object().keys({
@@ -13,7 +13,7 @@ function validateCategoryList(req, res, next) {
   if (error) {
     return sendFailedResponse(res, error, HTTP_STATUS_CODE.BAD_REQUEST);
   }
-  return next();
+  next();
 }
 
-module.exports = validateCategoryList;
+export default validateCategoryList;
