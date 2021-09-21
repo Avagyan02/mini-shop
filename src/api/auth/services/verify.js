@@ -5,13 +5,9 @@ async function verifyUser(req, res) {
   try {
     const user = await Users.findOne({ email: req.body.email, verified: false, userCode: req.body.code });
     if (user) {
-      try {
-        const userUpdate = await Users.updateOne({ _id: user._id }, { $set: { verified: true } });
-        if (userUpdate) {
-          sendSuccessResponse(res, 'User verified');
-        }
-      } catch (error) {
-        sendErrorResponse(error, res);
+      const userUpdate = await Users.updateOne({ _id: user._id }, { $set: { verified: true } });
+      if (userUpdate) {
+        sendSuccessResponse(res, 'User verified');
       }
     } else {
       sendFailedResponse(res, 'Wrong data');

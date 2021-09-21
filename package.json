@@ -4,6 +4,7 @@
   "description": "",
   "main": "",
   "target": "esnext",
+  "type": "module",
   "scripts": {
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
@@ -14,7 +15,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
   "dependencies": {
     "@babel/node": "^7.15.4",
     "bcrypt": "^5.0.1",

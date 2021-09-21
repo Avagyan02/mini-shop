@@ -24,9 +24,3 @@ export function sendErrorResponse(err, res) {
     data: null,
   });
 }
-
-// export {
-//   sendSuccessResponse,
-//   sendFailedResponse,
-//   sendErrorResponse,
-// };

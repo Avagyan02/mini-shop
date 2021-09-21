@@ -16,45 +16,37 @@ async function register(req, res) {
 
     const findUser = await Users.findOne({ email: req.body.email });
     if (!findUser) {
-      try {
-        const user = await Users.create(
-          {
+      const user = await Users.create(
+        {
+          name: req.body.name,
+          surname: req.body.surname,
+          email: req.body.email,
+          password: bcrypt.hashSync(req.body.password, 10),
+          telephone: req.body.telephone,
+          userCode: code,
+          role: USER_ROLES.user,
+        },
+      );
+      if (user) {
+        sendSuccessResponse(res, 'User created');
+        mailer(message);
+      }
+    } else if (!findUser.verified) {
+      const updateUser = await Users.updateOne(
+        { _id: findUser._id },
+        {
+          $set: {
             name: req.body.name,
             surname: req.body.surname,
-            email: req.body.email,
             password: bcrypt.hashSync(req.body.password, 10),
             telephone: req.body.telephone,
             userCode: code,
-            role: USER_ROLES.user,
           },
-        );
-        if (user) {
-          sendSuccessResponse(res, 'User created');
-          mailer(message);
-        }
-      } catch (error) {
-        sendErrorResponse(error, res);
-      }
-    } else if (!findUser.verified) {
-      try {
-        const updateUser = await Users.updateOne(
-          { _id: findUser._id },
-          {
-            $set: {
-              name: req.body.name,
-              surname: req.body.surname,
-              password: bcrypt.hashSync(req.body.password, 10),
-              telephone: req.body.telephone,
-              userCode: code,
-            },
-          },
-        );
-        if (updateUser) {
-          sendSuccessResponse(res, 'User updated');
-          mailer(message);
-        }
-      } catch (error) {
-        sendErrorResponse(error, res);
+        },
+      );
+      if (updateUser) {
+        sendSuccessResponse(res, 'User updated');
+        mailer(message);
       }
     } else {
       sendFailedResponse(res, 'User verified');
