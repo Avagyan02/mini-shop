@@ -14,40 +14,34 @@ async function register(req, res) {
             <h3>To pass full verification use this code. ${code}</h3>`,
     };
 
-    const findUser = await Users.findOne({ email: req.body.email });
-    if (!findUser) {
-      const user = await Users.create(
+    const userDetails = {
+      name: req.body.name,
+      surname: req.body.surname,
+      password: bcrypt.hashSync(req.body.password, 10),
+      telephone: req.body.telephone,
+      userCode: code,
+    };
+
+    const user = await Users.findOne({ email: req.body.email });
+    if (!user) {
+      await Users.create(
         {
-          name: req.body.name,
-          surname: req.body.surname,
+          ...userDetails,
           email: req.body.email,
-          password: bcrypt.hashSync(req.body.password, 10),
-          telephone: req.body.telephone,
-          userCode: code,
           role: USER_ROLES.user,
         },
       );
-      if (user) {
-        sendSuccessResponse(res, 'User created');
-        mailer(message);
-      }
-    } else if (!findUser.verified) {
-      const updateUser = await Users.updateOne(
-        { _id: findUser._id },
+      sendSuccessResponse(res, 'User created');
+      mailer(message);
+    } else if (!user.verified) {
+      await Users.updateOne(
+        { _id: user._id },
         {
-          $set: {
-            name: req.body.name,
-            surname: req.body.surname,
-            password: bcrypt.hashSync(req.body.password, 10),
-            telephone: req.body.telephone,
-            userCode: code,
-          },
+          $set: userDetails,
         },
       );
-      if (updateUser) {
-        sendSuccessResponse(res, 'User updated');
-        mailer(message);
-      }
+      sendSuccessResponse(res, 'User updated');
+      mailer(message);
     } else {
       sendFailedResponse(res, 'User verified');
     }

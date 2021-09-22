@@ -10,9 +10,7 @@ async function update(req, res) {
         nameHy: req.body.nameHy,
       },
     }, { new: true });
-    if (category) {
-      sendSuccessResponse(res, 'Category updated', category);
-    }
+    sendSuccessResponse(res, 'Category updated', category);
   } catch (error) {
     sendErrorResponse(error, res);
   }

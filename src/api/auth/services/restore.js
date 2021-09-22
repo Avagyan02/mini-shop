@@ -14,11 +14,9 @@ async function restore(req, res) {
     const user = await Users.findOne({ email: req.body.email });
     if (user) {
       if (user.verified) {
-        const userUpdate = await Users.updateOne({ _id: user._id }, { $set: { restoreCode: code } });
-        if (userUpdate) {
-          sendSuccessResponse(res, 'Message send');
-          mailer(message);
-        }
+        await Users.updateOne({ _id: user._id }, { $set: { restoreCode: code } });
+        sendSuccessResponse(res, 'Message send');
+        mailer(message);
       } else {
         sendFailedResponse(res, 'Go through full verification');
       }

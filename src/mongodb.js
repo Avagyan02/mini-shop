@@ -4,10 +4,8 @@ import createAdmin from './utils/createAdminUser';
 async function connect() {
   try {
     const connectDb = mongoose.connect('mongodb://localhost/categories');
-    if (connectDb) {
-      createAdmin();
-      console.log('Connect to db done');
-    }
+    createAdmin();
+    console.log('Connect to db done');
   } catch (error) {
     console.log('Dont connect to db', error);
   }

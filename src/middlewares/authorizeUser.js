@@ -12,8 +12,9 @@ function authorizeUser(req, res, next) {
     if (!token) {
       return sendFailedResponse(res, message, HTTP_STATUS_CODE.NOT_AUTHORIZED);
     }
-    jwt.verify(token, secret, (err, payload) => {
+    jwt.verify(token, secret.key, (err, payload) => {
       if (err) {
+        console.log(payload, token, secret, err);
         return sendFailedResponse(res, message, HTTP_STATUS_CODE.NOT_AUTHORIZED);
       }
       findByPayload(req, res, next, payload.id);

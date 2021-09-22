@@ -17,13 +17,11 @@ async function readMany(req, res) {
     const pageCount = Math.ceil(categoryCount / limit);
     if (pageNo <= pageCount) {
       const category = await Category.find({}, { __v: 0 }).skip(limit * (pageNo - 1)).limit(limit);
-      if (category) {
-        sendSuccessResponse(res, 'Category list fetched', {
-          count: categoryCount,
-          pageCount,
-          list: category,
-        });
-      }
+      sendSuccessResponse(res, 'Category list fetched', {
+        count: categoryCount,
+        pageCount,
+        list: category,
+      });
     } else {
       sendFailedResponse(res, 'It is not possible to split into so many elements');
     }

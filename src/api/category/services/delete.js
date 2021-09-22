@@ -3,10 +3,8 @@ import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseH
 
 async function delCat(req, res) {
   try {
-    const category = await Category.findOneAndDelete({ _id: req.params.id });
-    if (category) {
-      sendSuccessResponse(res, 'Category deleted', null);
-    }
+    await Category.findOneAndDelete({ _id: req.params.id });
+    sendSuccessResponse(res, 'Category deleted', null);
   } catch (error) {
     sendErrorResponse(error, res);
   }

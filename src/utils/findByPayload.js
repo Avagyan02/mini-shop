@@ -4,7 +4,7 @@ import { HTTP_STATUS_CODE } from './constants';
 
 async function findByPayload(req, res, next, id) {
   try {
-    const user = await User.findOne(id);
+    const user = await User.findOne({ _id: id });
     if (!user) {
       return sendFailedResponse(res, 'No registered user', HTTP_STATUS_CODE.NOT_AUTHORIZED);
     } else {

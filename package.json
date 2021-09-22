@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "",
-  "target": "esnext",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
-    "dev": "nodemon --experimental-modules --es-module-specifier-resolution=node ./src/index.js",
+    "dev": "npm start",
     "build": "babel ./src -d dist",
     "start": "npm run build && node dist/index.js"
   },

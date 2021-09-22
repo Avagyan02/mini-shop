@@ -4,9 +4,7 @@ import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseH
 async function create(req, res) {
   try {
     const category = await Category.create({ nameEn: req.body.nameEn, nameRu: req.body.nameRu, nameHy: req.body.nameHy });
-    if (category) {
-      sendSuccessResponse(res, 'Category created', category);
-    }
+    sendSuccessResponse(res, 'Category created', category);
   } catch (error) {
     sendErrorResponse(error, res);
   }
