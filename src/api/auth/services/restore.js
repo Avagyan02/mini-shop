@@ -1,6 +1,6 @@
 import Users from '../../../models/user';
-import getRandomCode from '../../../utils/get_code';
-import mailer from '../../../utils/send_message';
+import getRandomCode from '../../../utils/getCode';
+import mailer from '../../../utils/sendMessage';
 import { sendSuccessResponse, sendFailedResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
 async function restore(req, res) {

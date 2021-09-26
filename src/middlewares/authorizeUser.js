@@ -24,8 +24,12 @@ async function authorizeUser(req, res, next) {
       });
 
       const user = await User.findOne({ _id: id });
-      req.user = user;
-      next();
+      if (!user) {
+        return sendFailedResponse(res, 'Not authorized', HTTP_STATUS_CODE.BAD_REQUEST);
+      } else {
+        req.user = user;
+        next();
+      }
     } else {
       sendFailedResponse(res, 'User is not logged in', HTTP_STATUS_CODE.NOT_AUTHORIZED);
     }

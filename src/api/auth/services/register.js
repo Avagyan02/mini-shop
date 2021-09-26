@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
 import Users from '../../../models/user';
 import { sendSuccessResponse, sendFailedResponse, sendErrorResponse } from '../../../utils/responseHelpers';
-import getRandomCode from '../../../utils/get_code';
-import mailer from '../../../utils/send_message';
+import getRandomCode from '../../../utils/getCode';
+import mailer from '../../../utils/sendMessage';
 import { USER_ROLES } from '../../../utils/constants';
 
 async function register(req, res) {
