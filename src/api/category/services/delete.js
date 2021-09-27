@@ -4,7 +4,7 @@ import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseH
 async function delCat(req, res) {
   try {
     await Category.findOneAndDelete({ _id: req.params.id });
-    sendSuccessResponse(res, 'Category deleted', null);
+    sendSuccessResponse(res, 'Category deleted');
   } catch (error) {
     sendErrorResponse(error, res);
   }

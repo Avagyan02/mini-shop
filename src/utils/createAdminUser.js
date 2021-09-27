@@ -14,6 +14,7 @@ async function createAdminUser(req, res) {
         password: bcrypt.hashSync('qwerty12345', 10),
         telephone: +37494252626,
         role: USER_ROLES.admin,
+        verified: true,
       });
     } else {
       console.log('Users collection is not empty');

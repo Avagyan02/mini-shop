@@ -1,10 +1,28 @@
-export const HTTP_STATUS_CODE = {
-  SUCCESS: 200,
-  BAD_REQUEST: 400,
-  NOT_AUTHORIZED: 401,
-  FORBIDDEN: 403,
-  NOT_FOUND: 404,
-  INTERNAL_SERVER_ERROR: 500,
+export const HTTP_STATUSES = {
+  SUCCESS: {
+    code: 200,
+    message: 'SUCCESS',
+  },
+  BAD_REQUEST: {
+    code: 400,
+    message: 'BAD_REQUEST',
+  },
+  NOT_AUTHORIZED: {
+    code: 401,
+    message: 'NOT_AUTHORIZED',
+  },
+  FORBIDDEN: {
+    code: 403,
+    message: 'FORBIDDEN',
+  },
+  NOT_FOUND: {
+    code: 404,
+    message: 'NOT_FOUND',
+  },
+  INTERNAL_SERVER_ERROR: {
+    code: 500,
+    message: 'INTERNAL_SERVER_ERROR',
+  },
 };
 
 export const USER_ROLES = {

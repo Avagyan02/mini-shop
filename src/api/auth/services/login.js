@@ -12,12 +12,12 @@ async function createUser(req, res) {
       if (user.verified) {
         const pass = bcrypt.compareSync(req.body.password, user.password);
         if (pass) {
-          sendSuccessResponse(res, 'Logged in', generateUserToken(user._id, user.email));
+          sendSuccessResponse(res, 'Logged in', generateUserToken(user._id, user.email, user.role));
         } else {
           sendFailedResponse(res, message);
         }
       } else {
-        sendFailedResponse(res, 'Go through full verification');
+        sendFailedResponse(res, message);
       }
     } else {
       sendFailedResponse(res, message);

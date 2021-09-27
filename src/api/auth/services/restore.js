@@ -6,6 +6,7 @@ import { sendSuccessResponse, sendFailedResponse, sendErrorResponse } from '../.
 async function restore(req, res) {
   try {
     const code = getRandomCode('0123456789', 5);
+    const wrongEmailMessage = 'Wrong email';
     const message = {
       to: req.body.email,
       html: `<h1>Update password</h1>
@@ -18,10 +19,10 @@ async function restore(req, res) {
         sendSuccessResponse(res, 'Message send');
         mailer(message);
       } else {
-        sendFailedResponse(res, 'Go through full verification');
+        sendFailedResponse(res, wrongEmailMessage);
       }
     } else {
-      sendFailedResponse(res, 'Wrong email');
+      sendFailedResponse(res, wrongEmailMessage);
     }
   } catch (error) {
     sendErrorResponse(error, res);

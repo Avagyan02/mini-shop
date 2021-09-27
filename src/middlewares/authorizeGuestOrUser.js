@@ -4,7 +4,7 @@ import { HTTP_STATUSES } from '../utils/constants';
 import { sendFailedResponse, sendErrorResponse } from '../utils/responseHelpers';
 import secret from '../api/auth/token/config';
 
-async function authorizeUser(req, res, next) {
+async function authorizeGuestOrUser(req, res, next) {
   try {
     const message = 'Not valid token';
     let id;
@@ -12,7 +12,7 @@ async function authorizeUser(req, res, next) {
     if (req.headers.authorization) {
       const token = req.headers.authorization.split(' ')[1];
       if (!token) {
-        return sendFailedResponse(res, HTTP_STATUSES.NOT_AUTHORIZED.message, HTTP_STATUSES.NOT_AUTHORIZED.code);
+        return next();
       }
       jwt.verify(token, secret.key, (err, payload) => {
         if (err) {
@@ -28,11 +28,11 @@ async function authorizeUser(req, res, next) {
       req.user = user;
       next();
     } else {
-      sendFailedResponse(res, HTTP_STATUSES.NOT_AUTHORIZED.message, HTTP_STATUSES.NOT_AUTHORIZED.code);
+      next();
     }
   } catch (error) {
     sendErrorResponse(error, res);
   }
 }
 
-export default authorizeUser;
+export default authorizeGuestOrUser;

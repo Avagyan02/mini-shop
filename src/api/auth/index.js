@@ -9,6 +9,7 @@ import validateRestore from './validations/restore';
 import restore from './services/restore';
 import validateUpdatePass from './validations/updatePass';
 import updatePass from './services/updatePass';
+import authorizeUser from '../../middlewares/authorizeUser';
 
 const router = express.Router();
 
@@ -22,9 +23,9 @@ router
   .post('/verify', verifyValidate, verify);
 
 router
-  .post('/restore', validateRestore, restore);
+  .post('/restore', authorizeUser, validateRestore, restore);
 
 router
-  .post('/restore/verify', validateUpdatePass, updatePass);
+  .post('/restore/verify', authorizeUser, validateUpdatePass, updatePass);
 
 export default router;

@@ -1,14 +1,14 @@
-import { HTTP_STATUS_CODE } from './constants';
+import { HTTP_STATUSES } from './constants';
 
 export function sendSuccessResponse(res, message, result = null) {
-  res.status(HTTP_STATUS_CODE.SUCCESS).json({
+  res.status(HTTP_STATUSES.SUCCESS.code).json({
     success: true,
     message,
     data: result,
   });
 }
 
-export function sendFailedResponse(res, message, status = HTTP_STATUS_CODE.BAD_REQUEST) {
+export function sendFailedResponse(res, message = HTTP_STATUSES.BAD_REQUEST.message, status = HTTP_STATUSES.BAD_REQUEST.code) {
   res.status(status).json({
     success: false,
     message,
@@ -18,9 +18,9 @@ export function sendFailedResponse(res, message, status = HTTP_STATUS_CODE.BAD_R
 
 export function sendErrorResponse(err, res) {
   console.log(err);
-  res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).send({
+  res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR.code).send({
     success: false,
-    message: 'INTERNAL_SERVER_ERROR',
+    message: HTTP_STATUSES.INTERNAL_SERVER_ERROR.message,
     data: null,
   });
 }
