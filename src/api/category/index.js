@@ -8,19 +8,19 @@ import validate from './validations/validateCategory';
 import search from './validations/findCategory';
 import regexpId from '../../middlewares/veritableId';
 import validateCategoryList from './validations/validateCategoryList';
-import authorize from '../../middlewares/authorize';
+import { authorizeAdmin, authorizeGuestOrUser } from '../../middlewares/authorize';
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(authorize, validate, create)
-  .get(authorize, validateCategoryList, readMany);
+  .post(authorizeAdmin, validate, create)
+  .get(authorizeGuestOrUser, validateCategoryList, readMany);
 
 router
   .route('/:id')
-  .put(authorize, regexpId, search, validate, update)
-  .delete(authorize, regexpId, search, delCat)
-  .get(authorize, regexpId, search, read);
+  .put(authorizeAdmin, regexpId, search, validate, update)
+  .delete(authorizeAdmin, regexpId, search, delCat)
+  .get(authorizeGuestOrUser, regexpId, search, read);
 
 export default router;

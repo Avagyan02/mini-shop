@@ -14,7 +14,7 @@
     "no-else-return": "off",
     "no-use-before-define": "off",
     "import/named": "off",
-    "import/extensions": "off"
-
+    "import/extensions": "off",
+    "no-mixed-operators": "off"
   }
 }
