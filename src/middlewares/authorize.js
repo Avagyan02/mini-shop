@@ -5,10 +5,10 @@ import { sendFailedResponse, sendErrorResponse } from '../utils/responseHelpers'
 import secret from '../api/auth/token/config';
 
 function authorizeFactory(acceptedRoles) {
-  let id;
-  let role;
   return async (req, res, next) => {
     try {
+      let id;
+      let role;
       if (req.headers.authorization) {
         const auth = req.headers.authorization.split(' ');
         if (auth[0] === 'Bearer' && auth[1]) {
@@ -23,21 +23,21 @@ function authorizeFactory(acceptedRoles) {
           });
         }
 
-        if (!acceptedRoles.length || acceptedRoles.length >= 1 && acceptedRoles.includes(role)) {
+        if (!acceptedRoles.length || acceptedRoles.includes(role)) {
           const user = await User.findOne({ _id: id });
           console.log(user);
           if (!user) {
-            return sendFailedResponse(res, HTTP_STATUSES.FORBIDDEN);
+            return sendFailedResponse(res, HTTP_STATUSES.NOT_AUTHORIZED);
           }
           req.user = user;
           next();
         } else {
-          return sendFailedResponse(res, HTTP_STATUSES.NOT_AUTHORIZED);
+          return sendFailedResponse(res, HTTP_STATUSES.FORBIDDEN);
         }
-      } else if (!acceptedRoles.length && !req.headers.authorization) {
+      } else if (!acceptedRoles.length) {
         next();
       } else {
-        return sendFailedResponse(res, HTTP_STATUSES.NOT_AUTHORIZED);
+        return sendFailedResponse(res, HTTP_STATUSES.FORBIDDEN);
       }
     } catch (error) {
       sendErrorResponse(error, res);
