@@ -14,7 +14,7 @@ const productSchema = new mongoose.Schema({
     required: true,
   },
   category_id: {
-    type: String,
+    type: Number,
     required: 'Category is required',
   },
   createDt: {
