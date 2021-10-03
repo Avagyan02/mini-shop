@@ -30,10 +30,17 @@ const productSchema = new mongoose.Schema({
     default: 1,
     required: 'Quantity is required',
   },
-  image: [],
+  image: {
+    type: Array,
+    required: 'Image is required',
+  },
   price: {
     type: Number,
     required: 'Price is required',
+  },
+  viewCount: {
+    type: Number,
+    default: 0,
   },
   createdBy: { type: mongoose.schema.Types.ObjectId, ref: 'user' },
   categoryId: { type: mongoose.schema.Types.ObjectId, ref: 'categorie' },
@@ -44,10 +51,6 @@ const productSchema = new mongoose.Schema({
   updateDt: {
     type: Date,
     default: Date.now,
-  },
-  viewCount: {
-    type: Number,
-    default: 0,
   },
 });
 
