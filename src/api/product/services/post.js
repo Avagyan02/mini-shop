@@ -1,9 +1,9 @@
-import Prod from '../../../models/product';
+import Product from '../../../models/product';
 import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
 async function create(req, res) {
   try {
-    const product = await Prod.create(
+    const product = await Product.create(
       {
         nameEn: req.body.nameEn,
         nameRu: req.body.nameRu,
