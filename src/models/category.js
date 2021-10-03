@@ -19,5 +19,5 @@ const categorySchema = new mongoose.Schema({
   },
 });
 
-const Category = mongoose.model('categories_collections', categorySchema);
+const Category = mongoose.model('categorie', categorySchema);
 export default Category;

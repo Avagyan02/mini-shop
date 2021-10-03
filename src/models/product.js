@@ -30,16 +30,13 @@ const productSchema = new mongoose.Schema({
     default: 1,
     required: 'Quantity is required',
   },
-  image: {
-    type: String,
-    required: 'Image is required',
-  },
+  image: [],
   price: {
     type: Number,
     required: 'Price is required',
   },
-  createdBy: [{ type: mongoose.schema.Types.ObjectId, ref: 'users' }],
-  categoryId: [{ type: mongoose.schema.Types.ObjectId, ref: 'categories_collections' }],
+  createdBy: { type: mongoose.schema.Types.ObjectId, ref: 'user' },
+  categoryId: { type: mongoose.schema.Types.ObjectId, ref: 'categorie' },
   createDt: {
     type: Date,
     default: Date.now,
@@ -48,7 +45,11 @@ const productSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  viewCount: {
+    type: Number,
+    default: 0,
+  },
 });
 
-const Prod = mongoose.model('product_collections', productSchema);
+const Prod = mongoose.model('product', productSchema);
 export default Prod;
