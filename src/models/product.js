@@ -13,17 +13,17 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  category_id: {
-    type: Number,
-    required: 'Category is required',
+  descriptionEn: {
+    type: String,
+    required: true,
   },
-  createDt: {
-    type: Date,
-    default: Date.now,
+  descriptionRu: {
+    type: String,
+    required: true,
   },
-  updateDt: {
-    type: Date,
-    default: Date.now,
+  descriptionHy: {
+    type: String,
+    required: true,
   },
   quantity: {
     type: Number,
@@ -38,9 +38,15 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: 'Price is required',
   },
-  description: {
-    type: String,
-    required: 'Description is required',
+  createdBy: [{ type: mongoose.schema.Types.ObjectId, ref: 'users' }],
+  categoryId: [{ type: mongoose.schema.Types.ObjectId, ref: 'categories_collections' }],
+  createDt: {
+    type: Date,
+    default: Date.now,
+  },
+  updateDt: {
+    type: Date,
+    default: Date.now,
   },
 });
 
