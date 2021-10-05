@@ -3,7 +3,7 @@ import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseH
 
 async function update(req, res) {
   try {
-    const category = await Category.findOneAndUpdate({ _id: req.params.id }, {
+    const category = await Category.findOneAndUpdate({ _id: req.params.categoryId }, {
       $set: {
         nameEn: req.body.nameEn,
         nameRu: req.body.nameRu,

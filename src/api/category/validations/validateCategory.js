@@ -20,7 +20,7 @@ function validateCategory(req, res, next) {
   });
   const { error } = joiSchema.validate(req.body);
   if (error) {
-    return sendFailedResponse(res, error);
+    return sendFailedResponse(res);
   }
   next();
 }

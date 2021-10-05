@@ -37,15 +37,19 @@ function validateProduct(req, res, next) {
       .integer()
       .min(1),
 
-    image: Joi.string(),
-
     price: Joi.number()
       .integer()
       .min(10),
+
+    categoryId: Joi.string()
+      .pattern(new RegExp(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i))
+      .required(),
   });
   const { error } = joiSchema.validate(req.body);
   if (error) {
-    return sendFailedResponse(res, error);
+    return sendFailedResponse(res);
   }
   next();
 }
+
+export default validateProduct;

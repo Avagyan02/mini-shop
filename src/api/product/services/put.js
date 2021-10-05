@@ -1,10 +1,10 @@
 import Product from '../../../models/product';
 import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
-async function create(req, res) {
+async function update(req, res) {
   try {
-    const product = await Product.create(
-      {
+    const product = await Product.findOneAndUpdate({ id: req.params.productId }, {
+      $set: {
         nameEn: req.body.nameEn,
         nameRu: req.body.nameRu,
         nameHy: req.body.nameHy,
@@ -17,12 +17,11 @@ async function create(req, res) {
         createdBy: req.user._id,
         categoryId: req.body.categoryId,
       },
-    );
-
-    sendSuccessResponse(res, 'Product created', product);
+    }, { new: true });
+    sendSuccessResponse(res, 'Product updated', product);
   } catch (error) {
     sendErrorResponse(error, res);
   }
 }
 
-export default create;
+export default update;

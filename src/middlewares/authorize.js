@@ -30,7 +30,7 @@ function authorizeFactory(acceptedRoles) {
             return sendFailedResponse(res, HTTP_STATUSES.NOT_AUTHORIZED);
           }
           req.user = user;
-          next();
+          return next();
         } else {
           return sendFailedResponse(res, HTTP_STATUSES.FORBIDDEN);
         }

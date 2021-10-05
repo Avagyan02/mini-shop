@@ -43,12 +43,12 @@ const productSchema = new mongoose.Schema({
     default: 0,
   },
   createdBy: {
-    type: mongoose.schema.Types.ObjectId,
-    ref: 'user',
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'users',
   },
   categoryId: {
-    type: mongoose.schema.Types.ObjectId,
-    ref: 'category',
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'categories',
   },
   createDt: {
     type: Date,

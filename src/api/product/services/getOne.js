@@ -1,10 +1,10 @@
-import Category from '../../../models/category';
+import Product from '../../../models/product';
 import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
 async function read(req, res) {
   try {
-    const category = await Category.findOne({ _id: req.params.categoryId });
-    sendSuccessResponse(res, 'Category details fetched', category);
+    const product = await Product.findOne({ _id: req.params.productId });
+    sendSuccessResponse(res, 'Product details fetched', product);
   } catch (error) {
     sendErrorResponse(error, res);
   }

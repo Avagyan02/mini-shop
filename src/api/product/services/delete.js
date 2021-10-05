@@ -1,13 +1,13 @@
-import Category from '../../../models/category';
+import Product from '../../../models/product';
 import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
-async function delCat(req, res) {
+async function delProd(req, res) {
   try {
-    await Category.findOneAndDelete({ _id: req.params.categoryId });
+    await Product.findOneAndDelete({ _id: req.params.productId });
     sendSuccessResponse(res, 'Category deleted');
   } catch (error) {
     sendErrorResponse(error, res);
   }
 }
 
-export default delCat;
+export default delProd;
