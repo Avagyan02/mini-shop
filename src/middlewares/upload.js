@@ -2,9 +2,6 @@ import multer from 'multer';
 import moment from 'moment';
 
 const types = ['image/png', 'image/jpeg', 'image/jpg'];
-// const limits = {
-//   fileSize: 1024 * 1024 * 5,
-// };
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {

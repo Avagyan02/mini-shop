@@ -8,7 +8,7 @@ async function readMany(req, res) {
     const pageNo = +req.query.pageNo;
 
     if (!productCount) {
-      return sendSuccessResponse(res, 'Category list fetched', {
+      return sendSuccessResponse(res, 'Product list fetched', {
         count: productCount,
         pageCount: 1,
         list: [],
@@ -18,7 +18,7 @@ async function readMany(req, res) {
     const pageCount = Math.ceil(productCount / limit);
     if (pageNo <= pageCount) {
       const product = await Product.find({}).skip(limit * (pageNo - 1)).limit(limit);
-      sendSuccessResponse(res, 'Category list fetched', {
+      sendSuccessResponse(res, 'Product list fetched', {
         count: productCount,
         pageCount,
         list: product,

@@ -8,6 +8,7 @@ async function searchProduct(req, res, next) {
     if (!product) {
       return sendFailedResponse(res, HTTP_STATUSES.NOT_FOUND);
     }
+    req.viewCount = product.viewCount;
     next();
   } catch (error) {
     sendErrorResponse(error, res);

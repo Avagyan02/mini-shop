@@ -3,7 +3,16 @@ import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseH
 
 async function read(req, res) {
   try {
-    const product = await Product.findOne({ _id: req.params.productId });
+    const product = await Product.findOneAndUpdate(
+      {
+        _id: req.params.productId,
+      },
+      {
+        $set: {
+          viewCount: ++req.viewCount,
+        },
+      },
+    );
     sendSuccessResponse(res, 'Product details fetched', product);
   } catch (error) {
     sendErrorResponse(error, res);
