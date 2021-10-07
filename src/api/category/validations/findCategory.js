@@ -1,18 +1,18 @@
 import { HTTP_STATUSES } from '../../../utils/constants';
-import Product from '../../../models/product';
+import Category from '../../../models/category';
 import { sendFailedResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
-async function searchProduct(req, res, next) {
+async function searchCategory(req, res, next) {
   try {
-    const product = await Product.findOne({ _id: req.params.productId });
-    if (!product) {
+    const id = req.params.categoryId;
+    const category = await Category.findOne({ _id: id });
+    if (!category) {
       return sendFailedResponse(res);
     }
-    req.viewCount = product.viewCount;
     next();
   } catch (error) {
     sendErrorResponse(error, res);
   }
 }
 
-export default searchProduct;
+export default searchCategory;

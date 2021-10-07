@@ -9,19 +9,18 @@ import delProd from './services/delete';
 import upload from '../../middlewares/upload';
 import { authorizeAdmin, authorizeGuestOrUser } from '../../middlewares/authorize';
 import validateList from '../../middlewares/validateList';
-import searchCategory from '../../middlewares/findCategory';
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(authorizeAdmin, upload.single('image'), searchCategory, validateProduct, create)
+  .post(authorizeAdmin, upload.any('image'), validateProduct, create)
   .get(authorizeGuestOrUser, validateList, readMany);
 
 router
   .route('/:productId')
   .get(authorizeGuestOrUser, searchProduct, read)
   .delete(authorizeAdmin, searchProduct, delProd)
-  .put(authorizeAdmin, upload.single('image'), searchCategory, validateProduct, update);
+  .put(authorizeAdmin, upload.any('image'), validateProduct, update);
 
 export default router;

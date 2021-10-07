@@ -1,7 +1,8 @@
 import Joi from 'joi';
-import { sendFailedResponse } from '../../../utils/responseHelpers';
+import Category from '../../../models/category';
+import { sendFailedResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
-function validateProduct(req, res, next) {
+async function validateProduct(req, res, next) {
   const joiSchema = Joi.object().keys({
     nameEn: Joi.string()
       .min(2)
@@ -49,7 +50,17 @@ function validateProduct(req, res, next) {
   if (error) {
     return sendFailedResponse(res);
   }
-  next();
+
+  try {
+    const category = await Category.findOne({ _id: req.body.categoryId });
+    if (!category) {
+      console.log(category);
+      return sendFailedResponse(res);
+    }
+    next();
+  } catch (err) {
+    sendErrorResponse(err, res);
+  }
 }
 
 export default validateProduct;

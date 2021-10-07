@@ -5,7 +5,7 @@ import update from './services/put';
 import delCat from './services/delete';
 import read from './services/getOne';
 import validate from './validations/validateCategory';
-import search from '../../middlewares/findCategory';
+import search from './validations/findCategory';
 import validateList from '../../middlewares/validateList';
 import { authorizeAdmin, authorizeGuestOrUser } from '../../middlewares/authorize';
 
