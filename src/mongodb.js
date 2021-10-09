@@ -3,7 +3,11 @@ import createAdmin from './utils/createAdminUser';
 
 async function connect() {
   try {
-    const connectDb = mongoose.connect('mongodb://localhost/categories');
+    const connectDb = mongoose.connect('mongodb://localhost/categories',
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
     createAdmin();
     console.log('Connect to db done');
   } catch (error) {

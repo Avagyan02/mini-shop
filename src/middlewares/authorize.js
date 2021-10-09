@@ -16,7 +16,7 @@ function authorizeFactory(acceptedRoles) {
 
           jwt.verify(token, secret.key, (err, payload) => {
             if (err) {
-              return sendFailedResponse(res, HTTP_STATUSES.NOT_AUTHORIZED);
+              return sendFailedResponse(res, HTTP_STATUSES.NOT_AUTHORIZED.message, HTTP_STATUSES.NOT_AUTHORIZED.code);
             }
             id = payload.id;
             role = payload.role;
@@ -25,19 +25,19 @@ function authorizeFactory(acceptedRoles) {
 
         if (!acceptedRoles.length || acceptedRoles.includes(role)) {
           const user = await User.findOne({ _id: id });
-          console.log(user);
           if (!user) {
-            return sendFailedResponse(res, HTTP_STATUSES.NOT_AUTHORIZED);
+            return sendFailedResponse(res, HTTP_STATUSES.NOT_AUTHORIZED.message, HTTP_STATUSES.NOT_AUTHORIZED.code);
           }
+          req.role = user.role;
           req.user = user;
           return next();
         } else {
-          return sendFailedResponse(res, HTTP_STATUSES.FORBIDDEN);
+          return sendFailedResponse(res, HTTP_STATUSES.FORBIDDEN.message, HTTP_STATUSES.FORBIDDEN.code);
         }
       } else if (!acceptedRoles.length) {
         next();
       } else {
-        return sendFailedResponse(res, HTTP_STATUSES.FORBIDDEN);
+        return sendFailedResponse(res, HTTP_STATUSES.FORBIDDEN.message, HTTP_STATUSES.FORBIDDEN.code);
       }
     } catch (error) {
       sendErrorResponse(error, res);

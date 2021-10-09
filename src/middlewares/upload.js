@@ -5,7 +5,7 @@ const types = ['image/png', 'image/jpeg', 'image/jpg'];
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
-    cb(null, 'uploads');
+    cb(null, 'media');
   },
 
   filename(req, file, cb) {

@@ -17,6 +17,18 @@ const categorySchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  deleted: {
+    type: Boolean,
+    default: false,
+  },
+  updateDt: {
+    type: Date,
+    default: Date.now,
+  },
+  createDt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Category = mongoose.model('categories', categorySchema);

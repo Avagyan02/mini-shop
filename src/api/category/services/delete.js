@@ -1,10 +1,16 @@
 import Category from '../../../models/category';
-import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseHelpers';
+import { sendSuccessResponse, sendFailedResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
 async function delCat(req, res) {
   try {
-    await Category.findOneAndDelete({ _id: req.params.categoryId });
-    sendSuccessResponse(res, 'Category deleted');
+    const { category } = req;
+    if (!category.productCount) {
+      category.deleted = true;
+      await category.save();
+      sendSuccessResponse(res, 'Category deleted');
+    } else {
+      sendFailedResponse(res, 'There are products in the category');
+    }
   } catch (error) {
     sendErrorResponse(error, res);
   }

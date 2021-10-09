@@ -8,10 +8,10 @@ export function sendSuccessResponse(res, message, result = null) {
   });
 }
 
-export function sendFailedResponse(res, status = HTTP_STATUSES.BAD_REQUEST) {
-  res.status(status.code).json({
+export function sendFailedResponse(res, message = HTTP_STATUSES.BAD_REQUEST.message, code = HTTP_STATUSES.BAD_REQUEST.code) {
+  res.status(code).json({
     success: false,
-    message: status.message,
+    message,
     data: null,
   });
 }
