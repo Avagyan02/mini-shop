@@ -57,7 +57,7 @@ async function validateProduct(req, res, next) {
 
   try {
     const category = await Category.findOne({ _id: req.body.categoryId });
-    if (!category) {
+    if (!category || !(req.files.length)) {
       deleteFile(req, res);
       return sendFailedResponse(res);
     }
