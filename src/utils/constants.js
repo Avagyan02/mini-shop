@@ -30,6 +30,4 @@ export const USER_ROLES = {
   user: 2,
 };
 
-export const regexp = new RegExp(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i);
-
-export const link = `C:\\Users\\SAM\\Category\\media`;
+export const ObjectIDRegexp = new RegExp(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i);

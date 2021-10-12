@@ -1,9 +1,7 @@
-import path from 'path';
 import fs from 'fs';
-import { link } from './constants';
 
-function deleteFile(req, res) {
-  req.files.forEach((elem) => fs.unlinkSync(path.join(link, elem.path.split('\\')[1])));
+function deleteFile(req) {
+  req.files.forEach((elem) => fs.unlinkSync(elem.path));
 }
 
 export default deleteFile;

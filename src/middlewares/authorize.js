@@ -28,7 +28,6 @@ function authorizeFactory(acceptedRoles) {
           if (!user) {
             return sendFailedResponse(res, HTTP_STATUSES.NOT_AUTHORIZED.message, HTTP_STATUSES.NOT_AUTHORIZED.code);
           }
-          req.role = user.role;
           req.user = user;
           return next();
         } else {

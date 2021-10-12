@@ -6,6 +6,7 @@ async function readMany(req, res) {
     const categoryCount = await Category.countDocuments();
     const limit = +req.query.limit;
     const pageNo = +req.query.pageNo;
+    const { user } = req;
     let category = [];
     if (!categoryCount) {
       return sendSuccessResponse(res, 'Category list fetched', {
@@ -17,10 +18,10 @@ async function readMany(req, res) {
 
     const pageCount = Math.ceil(categoryCount / limit);
     if (pageNo <= pageCount) {
-      const categoryList = await Category.find({}, { __v: 0 }).skip(limit * (pageNo - 1)).limit(limit);
+      const categoryList = await Category.find({ deleted: false }, { __v: 0 }).skip(limit * (pageNo - 1)).limit(limit);
       category = categoryList.filter((elem) => {
         if (!elem.deleted) {
-          if (req.role === 1) {
+          if (user.role === 1) {
             return elem;
           } else if (elem.productCount) {
             return elem;

@@ -5,25 +5,22 @@ import { sendSuccessResponse, sendFailedResponse, sendErrorResponse } from '../.
 async function update(req, res) {
   try {
     const { product } = req;
+    const { _id } = req.user;
     const path = req.files.map((elem) => elem.path);
     const date = Date.now();
     if (req.body.categoryId === product.categoryId) {
-      await Product.findOneAndUpdate({ id: product.productId }, {
-        $set: {
-          nameEn: req.body.nameEn,
-          nameRu: req.body.nameRu,
-          nameHy: req.body.nameHy,
-          descriptionEn: req.body.descriptionEn,
-          descriptionRu: req.body.descriptionRu,
-          descriptionHy: req.body.descriptionHy,
-          quantity: req.body.quantity,
-          image: path,
-          price: req.body.price,
-          createdBy: req.user._id,
-          categoryId: req.body.categoryId,
-          updateDt: date,
-        },
-      }, { new: true });
+      product.nameEn = req.body.nameEn;
+      product.nameRu = req.body.nameRu;
+      product.nameHy = req.body.nameHy;
+      product.descriptionEn = req.body.descriptionEn;
+      product.descriptionRu = req.body.descriptionRu;
+      product.descriptionHy = req.body.descriptionHy;
+      product.categoryId = req.body.categoryId;
+      product.price = req.body.price;
+      product.image = path;
+      product.createdBy = _id;
+      product.updateDt = date;
+      product.save();
       sendSuccessResponse(res, 'Product updated', product);
     } else {
       deleteFile(req, res);

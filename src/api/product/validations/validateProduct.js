@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import Category from '../../../models/category';
 import deleteFile from '../../../utils/deleteFile';
-import { regexp } from '../../../utils/constants';
+import { ObjectIDRegexp } from '../../../utils/constants';
 import { sendFailedResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
 async function validateProduct(req, res, next) {
@@ -45,7 +45,7 @@ async function validateProduct(req, res, next) {
       .min(10),
 
     categoryId: Joi.string()
-      .pattern(regexp)
+      .pattern(ObjectIDRegexp)
       .required(),
   });
   const { error } = joiSchema.validate(req.body);
@@ -56,7 +56,7 @@ async function validateProduct(req, res, next) {
   }
 
   try {
-    const category = await Category.findOne({ _id: req.body.categoryId });
+    const category = await Category.findOne({ _id: req.body.categoryId, deleted: false });
     if (!category || !(req.files.length)) {
       deleteFile(req, res);
       return sendFailedResponse(res);

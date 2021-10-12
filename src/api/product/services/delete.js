@@ -5,7 +5,7 @@ import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseH
 async function delProd(req, res) {
   try {
     const { product } = req;
-    await Product.findOneAndDelete({ _id: product._id });
+    await Product.findOneAndDelete({ _id: product._id, deleted: false });
     const category = await Category.findOne({ _id: product.categoryId });
     category.productCount--;
     await category.save();
