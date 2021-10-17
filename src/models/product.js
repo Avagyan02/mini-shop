@@ -50,6 +50,10 @@ const productSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'categories',
   },
+  deleted: {
+    type: Boolean,
+    default: false,
+  },
   createDt: {
     type: Date,
     default: Date.now,

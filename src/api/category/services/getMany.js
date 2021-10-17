@@ -6,29 +6,41 @@ async function readMany(req, res) {
     const categoryCount = await Category.countDocuments();
     const limit = +req.query.limit;
     const pageNo = +req.query.pageNo;
+    const categoryListQuant = categoryCount >= limit * pageNo;
+    const pageCount = Math.ceil(categoryCount / limit);
     const { user } = req;
-    let category = [];
+    const message = 'Category list fetched';
+
     if (!categoryCount) {
-      return sendSuccessResponse(res, 'Category list fetched', {
+      return sendSuccessResponse(res, message, {
         count: categoryCount,
         pageCount: 1,
         list: [],
       });
     }
 
-    const pageCount = Math.ceil(categoryCount / limit);
-    if (pageNo <= pageCount) {
-      const categoryList = await Category.find({ deleted: false }, { __v: 0 }).skip(limit * (pageNo - 1)).limit(limit);
-      category = categoryList.filter((elem) => {
-        if (!elem.deleted) {
-          if (user.role === 1) {
-            return elem;
-          } else if (elem.productCount) {
-            return elem;
-          }
+    if (categoryListQuant) {
+      const category = categoryCount.filter((elem) => {
+        if (user.role === 1) {
+          return elem;
+        } else if (elem.productCount) {
+          return elem;
         }
       });
-      sendSuccessResponse(res, 'Category list fetched', {
+      if (category.length === limit) {
+        return sendSuccessResponse(res, message, {
+          count: categoryCount,
+          pageCount,
+          list: category,
+        });
+      } else if (category.length > limit) {
+        return sendSuccessResponse(res, message, {
+          count: categoryCount,
+          pageCount,
+          list: category.slice(limit * (pageNo - 1), limit * pageNo),
+        });
+      }
+      return sendSuccessResponse(res, 'Not enough categories', {
         count: categoryCount,
         pageCount,
         list: category,

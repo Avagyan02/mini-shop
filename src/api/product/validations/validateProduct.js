@@ -51,19 +51,20 @@ async function validateProduct(req, res, next) {
   const { error } = joiSchema.validate(req.body);
   if (error) {
     console.log(error);
-    deleteFile(req, res);
+    deleteFile(req.files);
     return sendFailedResponse(res);
   }
 
   try {
     const category = await Category.findOne({ _id: req.body.categoryId, deleted: false });
     if (!category || !(req.files.length)) {
-      deleteFile(req, res);
+      deleteFile(req.files);
       return sendFailedResponse(res);
     }
+    req.category = category;
     next();
   } catch (err) {
-    deleteFile(req, res);
+    deleteFile(req.files);
     sendErrorResponse(err, res);
   }
 }

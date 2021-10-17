@@ -18,7 +18,7 @@ async function createUser(req, res) {
           console.log(3);
           sendSuccessResponse(res, 'Logged in', generateUserToken(user._id, user.role));
         } else {
-          console.log(4);
+          console.log(4, pass, req.body.password, user.password);
           sendFailedResponse(res);
         }
       } else {

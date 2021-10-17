@@ -1,6 +1,6 @@
-import Product from '../../../models/product';
+import Category from '../../../models/category';
 import deleteFile from '../../../utils/deleteFile';
-import { sendSuccessResponse, sendFailedResponse, sendErrorResponse } from '../../../utils/responseHelpers';
+import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
 async function update(req, res) {
   try {
@@ -8,6 +8,7 @@ async function update(req, res) {
     const { _id } = req.user;
     const path = req.files.map((elem) => elem.path);
     const date = Date.now();
+
     if (req.body.categoryId === product.categoryId) {
       product.nameEn = req.body.nameEn;
       product.nameRu = req.body.nameRu;
@@ -23,11 +24,12 @@ async function update(req, res) {
       product.save();
       sendSuccessResponse(res, 'Product updated', product);
     } else {
-      deleteFile(req, res);
-      sendFailedResponse(res);
+      const category = await Category.findOne({ _id: req.body.categoryId });
+      category.productCount++;
+      category.save();
     }
   } catch (error) {
-    deleteFile(req, res);
+    deleteFile(req.files);
     sendErrorResponse(error, res);
   }
 }

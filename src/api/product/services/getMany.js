@@ -6,19 +6,38 @@ async function readMany(req, res) {
     const productCount = await Product.countDocuments();
     const limit = +req.query.limit;
     const pageNo = +req.query.pageNo;
+    const productListQuant = productCount >= limit * pageNo;
+    const pageCount = Math.ceil(productCount / limit);
+    const message = 'Product list fetched';
 
     if (!productCount) {
-      return sendSuccessResponse(res, 'Product list fetched', {
+      return sendSuccessResponse(res, message, {
         count: productCount,
         pageCount: 1,
         list: [],
       });
     }
 
-    const pageCount = Math.ceil(productCount / limit);
-    if (pageNo <= pageCount) {
-      const product = await Product.find({}).skip(limit * (pageNo - 1)).limit(limit);
-      sendSuccessResponse(res, 'Product list fetched', {
+    if (productListQuant) {
+      const product = productCount.filter((elem) => {
+        if (!elem.deleted) {
+          return elem;
+        }
+      });
+      if (product === limit) {
+        return sendSuccessResponse(res, message, {
+          count: productCount,
+          pageCount,
+          list: product,
+        });
+      } else if (product > limit) {
+        return sendSuccessResponse(res, message, {
+          count: productCount,
+          pageCount,
+          list: product.slice(limit * (pageNo - 1), limit * pageNo),
+        });
+      }
+      return sendSuccessResponse(res, 'Not enough categories', {
         count: productCount,
         pageCount,
         list: product,

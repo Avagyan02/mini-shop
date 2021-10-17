@@ -7,14 +7,13 @@ async function searchProduct(req, res, next) {
     const id = req.params.productId;
     if (!ObjectIDRegexp.test(id)) {
       return sendFailedResponse(res);
-    } else {
-      const product = await Product.findOne({ _id: id });
-      if (!product) {
-        return sendFailedResponse(res);
-      }
-      req.product = product;
-      next();
     }
+    const product = await Product.findOne({ _id: id, deleted: false });
+    if (!product) {
+      return sendFailedResponse(res);
+    }
+    req.product = product;
+    next();
   } catch (error) {
     sendErrorResponse(error, res);
   }
