@@ -15,7 +15,8 @@ async function restore(req, res) {
     const user = await Users.findOne({ email: req.body.email });
     if (user) {
       if (user.verified) {
-        await Users.updateOne({ _id: user._id }, { $set: { restoreCode: code } });
+        user.restoreCode = code;
+        await user.save();
         sendSuccessResponse(res, 'Message send');
         mailer(message);
       } else {

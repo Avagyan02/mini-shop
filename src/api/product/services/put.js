@@ -1,3 +1,4 @@
+import Product from '../../../models/product';
 import Category from '../../../models/category';
 import deleteFile from '../../../utils/deleteFile';
 import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseHelpers';
@@ -5,28 +6,37 @@ import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseH
 async function update(req, res) {
   try {
     const { product } = req;
+    const { category } = req;
     const { _id } = req.user;
     const path = req.files.map((elem) => elem.path);
     const date = Date.now();
+    const productDetails = {
+      nameEn: req.body.nameEn,
+      nameRu: req.body.nameRu,
+      nameHy: req.body.nameHy,
+      descriptionEn: req.body.descriptionEn,
+      descriptionRu: req.body.descriptionRu,
+      descriptionHy: req.body.descriptionHy,
+      categoryId: req.body.categoryId,
+      price: req.body.price,
+      image: product.image.push(path),
+      createdBy: _id,
+      updateDt: date,
+    };
 
     if (req.body.categoryId === product.categoryId) {
-      product.nameEn = req.body.nameEn;
-      product.nameRu = req.body.nameRu;
-      product.nameHy = req.body.nameHy;
-      product.descriptionEn = req.body.descriptionEn;
-      product.descriptionRu = req.body.descriptionRu;
-      product.descriptionHy = req.body.descriptionHy;
-      product.categoryId = req.body.categoryId;
-      product.price = req.body.price;
-      product.image = path;
-      product.createdBy = _id;
-      product.updateDt = date;
-      product.save();
-      sendSuccessResponse(res, 'Product updated', product);
+      const updatedProduct = await Product.updateOne({ _id: product._id }, ...productDetails, { new: true });
+      sendSuccessResponse(res, 'Product updated', updatedProduct);
     } else {
-      const category = await Category.findOne({ _id: req.body.categoryId });
-      category.productCount++;
-      category.save();
+      const decCat = { $inc: { productCount: -1 } };
+      const incCat = { $inc: { productCount: 1 } };
+      const updatedProduct = Product.updateOne({ _id: product._id }, ...productDetails, { new: true });
+      await Promise.all([
+        Category.updateOne({ _id: product.categoryId }, decCat),
+        Category.updateOne({ _id: req.body.categoryId }, incCat),
+        updatedProduct,
+      ]);
+      sendSuccessResponse(res, 'Product updated', updatedProduct);
     }
   } catch (error) {
     deleteFile(req.files);

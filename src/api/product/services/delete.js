@@ -5,14 +5,17 @@ import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseH
 async function delProd(req, res) {
   try {
     const { product } = req;
+
     const updateCat = { $inc: { productCount: -1 } };
-    const updatedCategory = Category.update({ _id: product.categoryId }, updateCat);
     product.deleted = true;
 
-    await Promise.all([updatedCategory, product.save()]);
+    await Promise.all([
+      Category.updateOne({ _id: product.categoryId }, updateCat),
+      product.save(),
+    ]);
+
     sendSuccessResponse(res, 'Product deleted');
   } catch (error) {
-    console.log(2);
     sendErrorResponse(error, res);
   }
 }

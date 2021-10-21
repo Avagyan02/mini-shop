@@ -6,7 +6,8 @@ async function updatePass(req, res) {
   try {
     const user = await Users.findOne({ email: req.body.email, restoreCode: req.body.code });
     if (user) {
-      await Users.updateOne({ _id: user._id }, { $set: { password: bcrypt.hashSync(req.body.password, 10) } });
+      user.password = bcrypt.hashSync(req.body.password, 10);
+      await user.save();
       return sendSuccessResponse(res, 'Password updated');
     }
     return sendFailedResponse(res, 'Wrong email or code');

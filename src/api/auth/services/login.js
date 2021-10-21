@@ -8,25 +8,18 @@ async function createUser(req, res) {
   try {
     const message = 'Incorrect email or password';
     const user = await Users.findOne({ email: req.body.email });
-    console.log(user);
     if (user) {
-      console.log(1);
       if (user.verified) {
-        console.log(2);
         const pass = bcrypt.compareSync(req.body.password, user.password);
         if (pass) {
-          console.log(3);
           sendSuccessResponse(res, 'Logged in', generateUserToken(user._id, user.role));
         } else {
-          console.log(4, pass, req.body.password, user.password);
           sendFailedResponse(res);
         }
       } else {
-        console.log(5);
         sendFailedResponse(res, message);
       }
     } else {
-      console.log(6);
       sendFailedResponse(res, message);
     }
   } catch (error) {

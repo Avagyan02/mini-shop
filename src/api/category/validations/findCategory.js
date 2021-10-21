@@ -12,17 +12,8 @@ async function searchCategory(req, res, next) {
     if (!category) {
       return sendFailedResponse(res);
     }
-
-    if (req.method === 'PUT' || req.method === 'DELETE') {
-      if (!req.user.role || req.user.role !== 1) {
-        return sendFailedResponse(res, HTTP_STATUSES.FORBIDDEN.message, HTTP_STATUSES.FORBIDDEN.code);
-      }
-      req.category = category;
-      next();
-    } else {
-      req.category = category;
-      next();
-    }
+    req.category = category;
+    next();
   } catch (error) {
     sendErrorResponse(error, res);
   }

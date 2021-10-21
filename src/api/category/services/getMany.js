@@ -1,4 +1,5 @@
 import Category from '../../../models/category';
+import { USER_ROLES } from '../../../utils/constants';
 import { sendSuccessResponse, sendErrorResponse, sendFailedResponse } from '../../../utils/responseHelpers';
 
 async function readMany(req, res) {
@@ -6,9 +7,9 @@ async function readMany(req, res) {
     const categoryCount = await Category.countDocuments();
     const limit = +req.query.limit;
     const pageNo = +req.query.pageNo;
-    const categoryListQuant = categoryCount >= limit * pageNo;
+    const categoryListQuant = categoryCount < limit * pageNo;
     const pageCount = Math.ceil(categoryCount / limit);
-    const { user } = req;
+    const filter = { deleted: false };
     const message = 'Category list fetched';
 
     if (!categoryCount) {
@@ -17,37 +18,19 @@ async function readMany(req, res) {
         pageCount: 1,
         list: [],
       });
+    } else if (categoryListQuant) {
+      return sendFailedResponse(res, 'It is not possible to split into so many elements');
     }
 
-    if (categoryListQuant) {
-      const category = categoryCount.filter((elem) => {
-        if (user.role === 1) {
-          return elem;
-        } else if (elem.productCount) {
-          return elem;
-        }
-      });
-      if (category.length === limit) {
-        return sendSuccessResponse(res, message, {
-          count: categoryCount,
-          pageCount,
-          list: category,
-        });
-      } else if (category.length > limit) {
-        return sendSuccessResponse(res, message, {
-          count: categoryCount,
-          pageCount,
-          list: category.slice(limit * (pageNo - 1), limit * pageNo),
-        });
-      }
-      return sendSuccessResponse(res, 'Not enough categories', {
-        count: categoryCount,
-        pageCount,
-        list: category,
-      });
-    } else {
-      sendFailedResponse(res, 'It is not possible to split into so many elements');
+    if (!req.user || req.user.role === USER_ROLES.user) {
+      filter.productCount = { $gte: 1 };
     }
+    const categoryList = await Category.find(filter).skip((pageNo - 1) * limit).limit(limit);
+    return sendSuccessResponse(res, message, {
+      count: categoryList.length,
+      pageCount,
+      list: categoryList,
+    });
   } catch (error) {
     sendErrorResponse(error, res);
   }

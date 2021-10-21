@@ -6,8 +6,9 @@ async function readMany(req, res) {
     const productCount = await Product.countDocuments();
     const limit = +req.query.limit;
     const pageNo = +req.query.pageNo;
-    const productListQuant = productCount >= limit * pageNo;
+    const productListQuant = productCount < limit * pageNo;
     const pageCount = Math.ceil(productCount / limit);
+    const filter = { deleted: false };
     const message = 'Product list fetched';
 
     if (!productCount) {
@@ -16,35 +17,16 @@ async function readMany(req, res) {
         pageCount: 1,
         list: [],
       });
+    } else if (productListQuant) {
+      return sendFailedResponse(res, 'It is not possible to split into so many elements');
     }
 
-    if (productListQuant) {
-      const product = productCount.filter((elem) => {
-        if (!elem.deleted) {
-          return elem;
-        }
-      });
-      if (product === limit) {
-        return sendSuccessResponse(res, message, {
-          count: productCount,
-          pageCount,
-          list: product,
-        });
-      } else if (product > limit) {
-        return sendSuccessResponse(res, message, {
-          count: productCount,
-          pageCount,
-          list: product.slice(limit * (pageNo - 1), limit * pageNo),
-        });
-      }
-      return sendSuccessResponse(res, 'Not enough categories', {
-        count: productCount,
-        pageCount,
-        list: product,
-      });
-    } else {
-      sendFailedResponse(res, 'It is not possible to split into so many elements');
-    }
+    const productList = await Product.find(filter).skip((pageNo - 1) * limit).limit(limit);
+    return sendSuccessResponse(res, message, {
+      count: productList.length,
+      pageCount,
+      list: productList,
+    });
   } catch (error) {
     sendErrorResponse(error, res);
   }
