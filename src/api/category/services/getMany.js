@@ -14,13 +14,14 @@ async function readMany(req, res) {
     }
 
     const filteredCategory = await Category.find(filter);
+    console.log(filteredCategory);
     if (pageNo * limit > filteredCategory.length) {
       return sendFailedResponse(res, 'It is not possible to split into so many elements');
     }
     return sendSuccessResponse(res, message, {
       count: filteredCategory.length,
       pageCount: Math.ceil(filteredCategory.length / limit),
-      list: filteredCategory.slice((pageNo * limit) - 1, (pageNo + 1) * limit),
+      list: limit !== filteredCategory.length ? filteredCategory.slice((pageNo * limit), (pageNo + 1) * limit) : filteredCategory,
     });
   } catch (error) {
     sendErrorResponse(error, res);

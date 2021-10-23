@@ -3,29 +3,19 @@ import { sendSuccessResponse, sendFailedResponse, sendErrorResponse } from '../.
 
 async function readMany(req, res) {
   try {
-    const productCount = await Product.countDocuments();
     const limit = +req.query.limit;
     const pageNo = +req.query.pageNo;
-    const productListQuant = productCount < limit * pageNo;
-    const pageCount = Math.ceil(productCount / limit);
     const filter = { deleted: false };
     const message = 'Product list fetched';
 
-    if (!productCount) {
-      return sendSuccessResponse(res, message, {
-        count: productCount,
-        pageCount: 1,
-        list: [],
-      });
-    } else if (productListQuant) {
+    const filteredProduct = await Product.find(filter);
+    if (limit * pageNo > filteredProduct.length) {
       return sendFailedResponse(res, 'It is not possible to split into so many elements');
     }
-
-    const productList = await Product.find(filter).skip((pageNo - 1) * limit).limit(limit);
     return sendSuccessResponse(res, message, {
-      count: productList.length,
-      pageCount,
-      list: productList,
+      count: filteredProduct.length,
+      pageCount: Math.ceil(filteredProduct.length / pageNo),
+      list: limit !== filteredProduct.length ? filteredProduct.slice((pageNo * limit), (pageNo + 1) * limit) : filteredProduct,
     });
   } catch (error) {
     sendErrorResponse(error, res);
