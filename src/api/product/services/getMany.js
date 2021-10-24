@@ -8,14 +8,16 @@ async function readMany(req, res) {
     const filter = { deleted: false };
     const message = 'Product list fetched';
 
-    const filteredProduct = await Product.find(filter);
-    if (limit * pageNo > filteredProduct.length) {
+    const filteredProductCount = await Product.countDocuments(filter);
+    if (limit * pageNo > filteredProductCount) {
       return sendFailedResponse(res, 'It is not possible to split into so many elements');
     }
+
+    const filteredProduct = await Product.find(filter).skip((pageNo - 1) * limit).limit(limit);
     return sendSuccessResponse(res, message, {
-      count: filteredProduct.length,
-      pageCount: Math.ceil(filteredProduct.length / pageNo),
-      list: limit !== filteredProduct.length ? filteredProduct.slice((pageNo * limit), (pageNo + 1) * limit) : filteredProduct,
+      count: filteredProductCount,
+      pageCount: Math.ceil(filteredProductCount / pageNo),
+      list: filteredProduct,
     });
   } catch (error) {
     sendErrorResponse(error, res);

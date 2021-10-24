@@ -13,15 +13,16 @@ async function readMany(req, res) {
       filter.productCount = { $gte: 1 };
     }
 
-    const filteredCategory = await Category.find(filter);
-    console.log(filteredCategory);
-    if (pageNo * limit > filteredCategory.length) {
+    const filteredCategoryCount = await Category.countDocuments(filter);
+    if (pageNo * limit > filteredCategoryCount) {
       return sendFailedResponse(res, 'It is not possible to split into so many elements');
     }
+
+    const filteredCategory = await Category.find(filter).skip((pageNo - 1) * limit).limit(limit);
     return sendSuccessResponse(res, message, {
-      count: filteredCategory.length,
-      pageCount: Math.ceil(filteredCategory.length / limit),
-      list: limit !== filteredCategory.length ? filteredCategory.slice((pageNo * limit), (pageNo + 1) * limit) : filteredCategory,
+      count: filteredCategoryCount,
+      pageCount: Math.ceil(filteredCategoryCount / limit),
+      list: filteredCategory,
     });
   } catch (error) {
     sendErrorResponse(error, res);
