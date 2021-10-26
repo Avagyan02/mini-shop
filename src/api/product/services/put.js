@@ -5,9 +5,7 @@ import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseH
 
 async function update(req, res) {
   try {
-    const { product } = req;
-    const { category } = req;
-    const { _id } = req.user;
+    const { product, category, user } = req;
     const path = req.files.map((elem) => elem.path);
     const date = Date.now();
     const productDetails = {
@@ -17,20 +15,20 @@ async function update(req, res) {
       descriptionEn: req.body.descriptionEn,
       descriptionRu: req.body.descriptionRu,
       descriptionHy: req.body.descriptionHy,
-      categoryId: req.body.categoryId,
-      price: req.body.price,
-      image: product.image.push(path),
-      createdBy: _id,
+      categoryId: category._id,
+      price: +req.body.price,
+      quantity: +req.body.quantity,
       updateDt: date,
     };
+    // image: product.image.concat(path),
 
-    if (req.body.categoryId === product.categoryId) {
-      const updatedProduct = await Product.updateOne({ _id: product._id }, ...productDetails, { new: true });
+    if (category._id === product.categoryId) {
+      const updatedProduct = await Product.updateOne({ _id: product._id }, { ...productDetails }, { new: true });
       sendSuccessResponse(res, 'Product updated', updatedProduct);
     } else {
       const decCat = { $inc: { productCount: -1 } };
       const incCat = { $inc: { productCount: 1 } };
-      const updatedProduct = Product.updateOne({ _id: product._id }, ...productDetails, { new: true });
+      const updatedProduct = Product.updateOne({ _id: product._id }, { ...productDetails }, { new: true });
       await Promise.all([
         Category.updateOne({ _id: product.categoryId }, decCat),
         Category.updateOne({ _id: req.body.categoryId }, incCat),
