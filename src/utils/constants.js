@@ -30,4 +30,11 @@ export const USER_ROLES = {
   user: 2,
 };
 
+export const FILE_TYPES = {
+  image: 1,
+  audio: 2,
+  video: 3,
+  file: 4,
+};
+
 export const ObjectIDRegexp = new RegExp(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i);

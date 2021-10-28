@@ -1,23 +1,24 @@
 import Product from '../../../models/product';
 import { ObjectIDRegexp } from '../../../utils/constants';
+import deleteFile from '../../../utils/deleteFile';
 import { sendFailedResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
 async function searchProduct(req, res, next) {
   try {
     const id = req.params.productId;
     if (!ObjectIDRegexp.test(id)) {
-      console.log(1);
+      deleteFile(req.files);
       return sendFailedResponse(res);
     }
     const product = await Product.findOne({ _id: id, deleted: false });
     if (!product) {
-      console.log(2);
+      deleteFile(req.files);
       return sendFailedResponse(res);
     }
-    console.log(3);
     req.product = product;
     next();
   } catch (error) {
+    deleteFile(req.files);
     sendErrorResponse(error, res);
   }
 }
