@@ -14,13 +14,13 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(authorizeAdmin, upload.any('image'), validateProduct, create)
+  .post(authorizeAdmin, upload.any('images'), validateProduct, create)
   .get(authorizeGuestOrUser, validateList, readMany);
 
 router
   .route('/:productId')
   .get(authorizeGuestOrUser, searchProduct, read)
   .delete(authorizeAdmin, searchProduct, delProd)
-  .put(authorizeAdmin, upload.any('image'), searchProduct, validateProduct, update);
+  .put(authorizeAdmin, upload.any('images'), searchProduct, validateProduct, update);
 
 export default router;

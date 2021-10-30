@@ -31,8 +31,8 @@ const productSchema = new mongoose.Schema({
     required: 'Quantity is required',
   },
   image: [{
-    type: String,
-    required: 'Image is required',
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'files',
   }],
   price: {
     type: Number,

@@ -1,5 +1,6 @@
 import Joi from 'joi';
 import Category from '../../../models/category';
+import Files from '../../../models/files';
 import deleteFile from '../../../utils/deleteFile';
 import { ObjectIDRegexp } from '../../../utils/constants';
 import { sendFailedResponse, sendErrorResponse } from '../../../utils/responseHelpers';
@@ -47,22 +48,40 @@ async function validateProduct(req, res, next) {
     categoryId: Joi.string()
       .pattern(ObjectIDRegexp)
       .required(),
+
+    image: Joi.array()
+      .items(Joi.object()),
+
+    deleteImageIdList: Joi.array()
+      .items(Joi.string().pattern(ObjectIDRegexp)),
   });
   const { error } = joiSchema.validate(req.body);
   if (error) {
     console.log(error);
-    console.log(4);
     deleteFile(req.files);
     return sendFailedResponse(res);
   }
 
   try {
+    const { product } = req;
+    const { deleteImageIdList } = req.body;
+    const promiseArr = [];
     const category = await Category.findOne({ _id: req.body.categoryId, deleted: false });
-    if (!category || !(req.files)) {
+    if (deleteImageIdList) {
+      product.image.filter((elem, i) => {
+        if (deleteImageIdList.includes(elem)) {
+          promiseArr.push(Files.findOneAndDelete({ _id: deleteImageIdList[i] }));
+          product.image.splice(i, i + 1);
+        }
+      });
+    }
+    if (promiseArr.length) {
+      await Promise.all(promiseArr);
+    }
+    if (!category || !req.files) {
       deleteFile(req.files);
       return sendFailedResponse(res);
     }
-    console.log(6);
     req.category = category;
     next();
   } catch (err) {
