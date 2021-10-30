@@ -1,12 +1,14 @@
 import Category from '../../../models/category';
+import Files from '../../../models/files';
 import deleteFile from '../../../utils/deleteFile';
-import saveFilesFromUploads from '../../../utils/saveFilesFromUploads';
+import saveImagesFrom from '../../../utils/saveImagesFrom';
 import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
 async function update(req, res) {
   try {
     const { product, category } = req;
-    const files = await saveFilesFromUploads(res, req.files);
+    const { deleteImageIdList } = req.body;
+    const files = await saveImagesFrom(req.files);
     const date = Date.now();
     product.nameEn = req.body.nameEn;
     product.nameRu = req.body.nameRu;
@@ -20,6 +22,19 @@ async function update(req, res) {
     product.image.push(...files);
 
     const promiseArr = [];
+    console.log(deleteImageIdList);
+    if (deleteImageIdList) {
+      deleteImageIdList.filter((elem, i) => {
+        if (product.image.length > 1) {
+          if (product.image.includes(elem.toString())) {
+            promiseArr.push(Files.findOneAndDelete({ _id: elem }));
+            product.image.splice(i, i + 1);
+          }
+        } else {
+          return false;
+        }
+      });
+    }
 
     if (category._id !== product.categoryId) {
       const decCat = { $inc: { productCount: -1 } };
@@ -30,7 +45,7 @@ async function update(req, res) {
     }
 
     product.categoryId = category._id;
-    await Promise.all(promiseArr, product.save());
+    await Promise.all([promiseArr, product.save()]);
     sendSuccessResponse(res, 'Product updated', product);
   } catch (error) {
     deleteFile(req.files);

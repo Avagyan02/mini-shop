@@ -63,21 +63,7 @@ async function validateProduct(req, res, next) {
   }
 
   try {
-    const { product } = req;
-    const { deleteImageIdList } = req.body;
-    const promiseArr = [];
     const category = await Category.findOne({ _id: req.body.categoryId, deleted: false });
-    if (deleteImageIdList) {
-      product.image.filter((elem, i) => {
-        if (deleteImageIdList.includes(elem)) {
-          promiseArr.push(Files.findOneAndDelete({ _id: deleteImageIdList[i] }));
-          product.image.splice(i, i + 1);
-        }
-      });
-    }
-    if (promiseArr.length) {
-      await Promise.all(promiseArr);
-    }
     if (!category || !req.files) {
       deleteFile(req.files);
       return sendFailedResponse(res);
