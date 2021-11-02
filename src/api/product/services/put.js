@@ -1,8 +1,9 @@
 import Category from '../../../models/category';
 import Files from '../../../models/files';
 import deleteFile from '../../../utils/deleteFile';
+import intersectFileId from '../../../utils/intersectFileId';
 import saveImagesFrom from '../../../utils/saveImagesFrom';
-import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseHelpers';
+import { sendSuccessResponse, sendFailedResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
 async function update(req, res) {
   try {
@@ -22,18 +23,18 @@ async function update(req, res) {
     product.image.push(...files);
 
     const promiseArr = [];
-    console.log(deleteImageIdList);
     if (deleteImageIdList) {
-      deleteImageIdList.filter((elem, i) => {
-        if (product.image.length > 1) {
-          if (product.image.includes(elem.toString())) {
-            promiseArr.push(Files.findOneAndDelete({ _id: elem }));
-            product.image.splice(i, i + 1);
-          }
-        } else {
-          return false;
-        }
-      });
+      const result = intersectFileId(product.image, deleteImageIdList);
+      if (result === product.image.length) {
+        return sendFailedResponse(res, 'Cannot delete all photos');
+      } else if (result === deleteImageIdList.length) {
+        deleteImageIdList.filter((elem, i) => {
+          promiseArr.push(Files.findOneAndDelete({ _id: elem }));
+          product.image.splice(i, i + 1);
+        });
+      } else {
+        return sendFailedResponse(res);
+      }
     }
 
     if (category._id !== product.categoryId) {
@@ -45,7 +46,7 @@ async function update(req, res) {
     }
 
     product.categoryId = category._id;
-    await Promise.all([promiseArr, product.save()]);
+    await Promise.all([...promiseArr, product.save()]);
     sendSuccessResponse(res, 'Product updated', product);
   } catch (error) {
     deleteFile(req.files);
