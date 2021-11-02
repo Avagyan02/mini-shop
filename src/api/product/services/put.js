@@ -2,12 +2,11 @@ import Category from '../../../models/category';
 import Files from '../../../models/files';
 import deleteFile from '../../../utils/deleteFile';
 import saveImagesFrom from '../../../utils/saveImagesFrom';
-import { sendSuccessResponse, sendFailedResponse, sendErrorResponse } from '../../../utils/responseHelpers';
+import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
 async function update(req, res) {
   try {
-    const { product, category } = req;
-    const { deleteImageIdList } = req.body;
+    const { product, category, deletedImage } = req;
     const date = Date.now();
     product.nameEn = req.body.nameEn;
     product.nameRu = req.body.nameRu;
@@ -20,18 +19,11 @@ async function update(req, res) {
     product.updateDt = date;
 
     const promiseArr = [];
-    if (deleteImageIdList) {
-      if (deleteImageIdList.length === product.image.length && !req.files) {
-        return sendFailedResponse(res, 'Cannot delete all photos');
-      }
-      deleteImageIdList.forEach((elem, i) => {
-        const imageFind = product.image.find((item) => item.toString() === elem);
-        if (!imageFind) {
-          return sendFailedResponse(res);
-        }
-        promiseArr.push(Files.findOneAndDelete({ _id: elem }));
-        deleteFile(req.files);
-        product.image.splice(i, i + 1);
+
+    if (deletedImage) {
+      deletedImage.forEach((elem) => {
+        promiseArr.push(Files.findOneAndDelete({ _id: elem._id }));
+        product.image.splice(product.image.indexOf(elem._id), product.image.indexOf(elem._id) + 1);
       });
     }
     const files = await saveImagesFrom(req.files);

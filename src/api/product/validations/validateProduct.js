@@ -63,10 +63,28 @@ async function validateProduct(req, res, next) {
   }
 
   try {
+    const { deleteImageIdList } = req.body;
+    const { product } = req;
     const category = await Category.findOne({ _id: req.body.categoryId, deleted: false });
     if (!category || !req.files) {
       deleteFile(req.files);
       return sendFailedResponse(res);
+    }
+    if (deleteImageIdList) {
+      const imageId = [];
+      if (deleteImageIdList.length === product.image.length && !req.files) {
+        return sendFailedResponse(res, 'Cannot delete all photos');
+      }
+      deleteImageIdList.forEach((elem) => {
+        const imageFind = product.image.find((item) => item.toString() === elem);
+        if (!imageFind) {
+          deleteFile(req.files);
+          return sendFailedResponse(res);
+        }
+        imageId.push(Files.findOne({ _id: elem }));
+      });
+      const deletedImage = await Promise.all(imageId);
+      req.deletedImage = deletedImage;
     }
     req.category = category;
     next();
