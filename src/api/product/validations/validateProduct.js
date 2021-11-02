@@ -53,7 +53,7 @@ async function validateProduct(req, res, next) {
       .items(Joi.object()),
 
     deleteImageIdList: Joi.array()
-      .items(Joi.string().pattern(ObjectIDRegexp)),
+      .items(Joi.string().pattern(ObjectIDRegexp)).unique(),
   });
   const { error } = joiSchema.validate(req.body);
   if (error) {
