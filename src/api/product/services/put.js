@@ -1,7 +1,7 @@
 import Category from '../../../models/category';
 import Files from '../../../models/files';
 import deleteFile from '../../../utils/deleteFile';
-import saveImagesFrom from '../../../utils/saveImagesFrom';
+import saveImagesFromUpload from '../../../utils/saveImagesFromUpload';
 import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
 async function update(req, res) {
@@ -26,7 +26,7 @@ async function update(req, res) {
         product.image.splice(product.image.indexOf(elem._id), product.image.indexOf(elem._id) + 1);
       });
     }
-    const files = await saveImagesFrom(req.files);
+    const files = await saveImagesFromUpload(req.files);
     product.image.push(...files);
 
     if (category._id !== product.categoryId) {
