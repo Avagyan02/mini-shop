@@ -53,7 +53,7 @@ async function validateProduct(req, res, next) {
       .items(Joi.object()),
 
     deleteImageIdList: Joi.array()
-      .items(Joi.string().pattern(ObjectIDRegexp)),
+      .items(Joi.string().pattern(ObjectIDRegexp)).unique(),
   });
   const { error } = joiSchema.validate(req.body);
   if (error) {
@@ -63,24 +63,28 @@ async function validateProduct(req, res, next) {
   }
 
   try {
-    const { product } = req;
     const { deleteImageIdList } = req.body;
-    const promiseArr = [];
+    const { product } = req;
     const category = await Category.findOne({ _id: req.body.categoryId, deleted: false });
-    if (deleteImageIdList) {
-      product.image.filter((elem, i) => {
-        if (deleteImageIdList.includes(elem)) {
-          promiseArr.push(Files.findOneAndDelete({ _id: deleteImageIdList[i] }));
-          product.image.splice(i, i + 1);
-        }
-      });
-    }
-    if (promiseArr.length) {
-      await Promise.all(promiseArr);
-    }
-    if (!category || !req.files) {
+    if (!category || (req.method === 'POST' && !req.files)) {
       deleteFile(req.files);
       return sendFailedResponse(res);
+    }
+    if (deleteImageIdList) {
+      const promiseArr = [];
+      if (deleteImageIdList.length === product.image.length && !req.files) {
+        return sendFailedResponse(res, 'Cannot delete all photos');
+      }
+      deleteImageIdList.forEach((elem) => {
+        const imageFind = product.image.find((item) => item.toString() === elem);
+        if (!imageFind) {
+          deleteFile(req.files);
+          return sendFailedResponse(res);
+        }
+        promiseArr.push(Files.findOne({ _id: elem }));
+      });
+      const deletedImage = await Promise.all(promiseArr);
+      req.deleteImageList = deletedImage;
     }
     req.category = category;
     next();
