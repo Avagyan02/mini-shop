@@ -6,7 +6,7 @@ import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseH
 
 async function update(req, res) {
   try {
-    const { product, category, deletedImage } = req;
+    const { product, category, deleteImageList } = req;
     const date = Date.now();
     product.nameEn = req.body.nameEn;
     product.nameRu = req.body.nameRu;
@@ -20,8 +20,9 @@ async function update(req, res) {
 
     const promiseArr = [];
 
-    if (deletedImage) {
-      deletedImage.forEach((elem) => {
+    if (deleteImageList) {
+      deleteFile(deleteImageList);
+      deleteImageList.forEach((elem) => {
         promiseArr.push(Files.findOneAndDelete({ _id: elem._id }));
         product.image.splice(product.image.indexOf(elem._id), product.image.indexOf(elem._id) + 1);
       });

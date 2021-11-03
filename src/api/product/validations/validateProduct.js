@@ -66,12 +66,12 @@ async function validateProduct(req, res, next) {
     const { deleteImageIdList } = req.body;
     const { product } = req;
     const category = await Category.findOne({ _id: req.body.categoryId, deleted: false });
-    if (!category || !req.files) {
+    if (!category || (req.method === 'POST' && !req.files)) {
       deleteFile(req.files);
       return sendFailedResponse(res);
     }
     if (deleteImageIdList) {
-      const imageId = [];
+      const promiseArr = [];
       if (deleteImageIdList.length === product.image.length && !req.files) {
         return sendFailedResponse(res, 'Cannot delete all photos');
       }
@@ -81,10 +81,10 @@ async function validateProduct(req, res, next) {
           deleteFile(req.files);
           return sendFailedResponse(res);
         }
-        imageId.push(Files.findOne({ _id: elem }));
+        promiseArr.push(Files.findOne({ _id: elem }));
       });
-      const deletedImage = await Promise.all(imageId);
-      req.deletedImage = deletedImage;
+      const deletedImage = await Promise.all(promiseArr);
+      req.deleteImageList = deletedImage;
     }
     req.category = category;
     next();
