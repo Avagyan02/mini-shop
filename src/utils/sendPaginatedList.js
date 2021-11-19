@@ -2,7 +2,7 @@ import { sendSuccessResponse, sendFailedResponse, sendErrorResponse } from './re
 
 async function sendPaginatedList(res, Model, filter, pageNo, limit, select, mapping) {
   try {
-    const nameDesc = Object.values(mapping);
+    const mapKeys = Object.keys(mapping);
     const message = 'List fetched';
     const filteredProductCount = await Model.countDocuments(filter);
     if (!filteredProductCount) {
@@ -17,20 +17,19 @@ async function sendPaginatedList(res, Model, filter, pageNo, limit, select, mapp
       return sendFailedResponse(res, 'It is not possible to split into so many elements');
     }
     const filteredProduct = await Model.find(filter, { __v: 0 }).skip((pageNo - 1) * limit).limit(limit).select(select);
-    const dispatchedProduct = filteredProduct.map((elem) => {
-      const { [nameDesc[0]]: name, [nameDesc[1]]: description, ...rest } = elem._doc;
-      rest.name = name;
-      if (description) {
-        rest.description = description;
-        delete elem._doc[nameDesc[1]];
-      }
-      delete elem._doc[nameDesc[0]];
-      return { ...rest };
+    const itemList = filteredProduct.map((elem) => {
+      mapKeys.forEach((key) => {
+        if (elem[key]) {
+          elem[mapping[key]] = elem[key];
+          delete elem[key];
+        }
+      });
+      return elem;
     });
     return sendSuccessResponse(res, message, {
       count: filteredProductCount,
       pageCount: Math.ceil(filteredProductCount / pageNo),
-      list: dispatchedProduct,
+      list: itemList,
     });
   } catch (error) {
     sendErrorResponse(error, res);

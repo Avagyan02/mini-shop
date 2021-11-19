@@ -8,13 +8,14 @@ import validate from './validations/validateCategory';
 import search from './validations/findCategory';
 import validateList from '../../middlewares/validateList';
 import { authorizeAdmin, authorizeGuestOrUser } from '../../middlewares/authorize';
+import validateLanguage from '../../middlewares/validateLanguage';
 
 const router = express.Router();
 
 router
   .route('/')
   .post(authorizeAdmin, validate, create)
-  .get(authorizeGuestOrUser, validateList, readMany);
+  .get(authorizeGuestOrUser, validateLanguage, validateList, readMany);
 
 router
   .route('/:categoryId')

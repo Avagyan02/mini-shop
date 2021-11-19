@@ -8,27 +8,24 @@ async function readMany(req, res) {
     const pageNo = +req.query.pageNo;
     const priceTo = +req.query.priceTo;
     const priceFrom = +req.query.priceFrom;
+    const { language } = req.headers;
     const { search } = req.query;
+    const { notSelectedLanguages } = req;
     const filter = { deleted: false };
 
     const dispatchedLanguage = {
-      name: `name${req.headers.language}`,
-      description: `description${req.headers.language}`,
+      [`name${req.headers.language}`]: 'name',
+      [`description${req.headers.language}`]: 'description',
     };
-    const nameLanguages = ['nameHy', 'nameRu', 'nameEn'];
-    const descLanguages = ['descriptionHy', 'descriptionRu', 'descriptionEn'];
-    const name = nameLanguages.splice(
-      nameLanguages.indexOf(dispatchedLanguage.name),
-      nameLanguages.indexOf(dispatchedLanguage.name) + 1,
-    )[0];
-    const description = descLanguages.splice(
-      descLanguages.indexOf(dispatchedLanguage.description),
-      descLanguages.indexOf(dispatchedLanguage.description) + 1,
-    )[0];
-    const select = `-${nameLanguages[0]} -${nameLanguages[1]} -${descLanguages[0]} -${descLanguages[1]}`;
+
+    const select = `-name${notSelectedLanguages[0]} -name${notSelectedLanguages[1]} -description${notSelectedLanguages[0]} -description${notSelectedLanguages[1]}`;
     filter['$or'] = [
-      { [`${name}`]: { $regex: `${search}`, $options: 'i' } },
-      { [`${description}`]: { $regex: `${search}`, $options: 'i' } },
+      { [`name${language}`]: { $regex: `${search}`, $options: 'i' } },
+      { [`name${notSelectedLanguages[0]}`]: { $regex: `${search}`, $options: 'i' } },
+      { [`name${notSelectedLanguages[1]}`]: { $regex: `${search}`, $options: 'i' } },
+      { [`description${language}`]: { $regex: `${search}`, $options: 'i' } },
+      { [`description${notSelectedLanguages[0]}`]: { $regex: `${search}`, $options: 'i' } },
+      { [`description${notSelectedLanguages[1]}`]: { $regex: `${search}`, $options: 'i' } },
     ];
 
     if (priceTo) {

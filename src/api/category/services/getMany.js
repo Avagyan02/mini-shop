@@ -7,17 +7,18 @@ async function readMany(req, res) {
   try {
     const limit = +req.query.limit;
     const pageNo = +req.query.pageNo;
+    const { language } = req.headers;
     const { search } = req.query;
-    const dispatchedLanguage = { name: `name${req.headers.language}` };
-    const nameLanguages = ['nameHy', 'nameRu', 'nameEn'];
+    const { notSelectedLanguages } = req;
     const filter = { deleted: false };
+    const dispatchedLanguage = { name: `name${req.headers.language}` };
 
-    const name = nameLanguages.splice(
-      nameLanguages.indexOf(dispatchedLanguage.name),
-      nameLanguages.indexOf(dispatchedLanguage.name) + 1,
-    )[0];
-    const select = `-${nameLanguages[0]} -${nameLanguages[1]}`;
-    filter[`${name}`] = { $regex: `${search}`, $options: 'i' };
+    const select = `-name${notSelectedLanguages[0]} -name${notSelectedLanguages[1]}`;
+    filter['$or'] = [
+      { [`name${language}`]: { $regex: `${search}`, $options: 'i' } },
+      { [`name${notSelectedLanguages[0]}`]: { $regex: `${search}`, $options: 'i' } },
+      { [`name${notSelectedLanguages[1]}`]: { $regex: `${search}`, $options: 'i' } },
+    ];
 
     if (!req.user || req.user.role === USER_ROLES.user) {
       filter.productCount = { $gte: 1 };

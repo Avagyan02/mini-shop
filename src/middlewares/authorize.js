@@ -9,7 +9,7 @@ function authorizeFactory(acceptedRoles) {
     try {
       let id;
       let role;
-      if (req.headers.authorization && req.headers.language.length === 2) {
+      if (req.headers.authorization) {
         const auth = req.headers.authorization.split(' ');
         if (auth[0] === 'Bearer' && auth[1]) {
           const token = auth[1];
@@ -20,6 +20,7 @@ function authorizeFactory(acceptedRoles) {
             }
             id = payload.id;
             role = payload.role;
+            console.log(payload);
           });
         }
 
@@ -39,7 +40,6 @@ function authorizeFactory(acceptedRoles) {
         return sendFailedResponse(res, HTTP_STATUSES.FORBIDDEN.message, HTTP_STATUSES.FORBIDDEN.code);
       }
     } catch (error) {
-      console.log(3);
       sendErrorResponse(error, res);
     }
   };
