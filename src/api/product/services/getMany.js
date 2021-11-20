@@ -12,27 +12,33 @@ async function readMany(req, res) {
     const { search } = req.query;
     const { notSelectedLanguages } = req;
     const filter = { deleted: false };
+    const regexpSearch = { $regex: `${search}`, $options: 'i' };
 
     const dispatchedLanguage = {
-      [`name${req.headers.language}`]: 'name',
-      [`description${req.headers.language}`]: 'description',
+      [`name${language}`]: 'name',
+      [`description${language}`]: 'description',
     };
 
-    const select = `-name${notSelectedLanguages[0]} -name${notSelectedLanguages[1]} -description${notSelectedLanguages[0]} -description${notSelectedLanguages[1]}`;
-    filter['$or'] = [
-      { [`name${language}`]: { $regex: `${search}`, $options: 'i' } },
-      { [`name${notSelectedLanguages[0]}`]: { $regex: `${search}`, $options: 'i' } },
-      { [`name${notSelectedLanguages[1]}`]: { $regex: `${search}`, $options: 'i' } },
-      { [`description${language}`]: { $regex: `${search}`, $options: 'i' } },
-      { [`description${notSelectedLanguages[0]}`]: { $regex: `${search}`, $options: 'i' } },
-      { [`description${notSelectedLanguages[1]}`]: { $regex: `${search}`, $options: 'i' } },
-    ];
+    if (search) {
+      filter['$or'] = [
+        { [`name${language}`]: regexpSearch },
+        { [`name${notSelectedLanguages[0]}`]: regexpSearch },
+        { [`name${notSelectedLanguages[1]}`]: regexpSearch },
+        { [`description${language}`]: regexpSearch },
+        { [`description${notSelectedLanguages[0]}`]: regexpSearch },
+        { [`description${notSelectedLanguages[1]}`]: regexpSearch },
+      ];
+    }
 
-    if (priceTo) {
+    if (priceTo && priceFrom) {
+      filter.price = { $gte: priceFrom, $lte: priceTo };
+    } else if (priceTo) {
       filter.price = { $lte: priceTo };
     } else if (priceFrom) {
       filter.price = { $gte: priceFrom };
     }
+
+    const select = `-name${notSelectedLanguages[0]} -name${notSelectedLanguages[1]} -description${notSelectedLanguages[0]} -description${notSelectedLanguages[1]}`;
     return sendPaginatedList(res, Product, filter, pageNo, limit, select, dispatchedLanguage);
   } catch (error) {
     sendErrorResponse(error, res);

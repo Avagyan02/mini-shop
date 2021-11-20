@@ -20,7 +20,6 @@ function authorizeFactory(acceptedRoles) {
             }
             id = payload.id;
             role = payload.role;
-            console.log(payload);
           });
         }
 

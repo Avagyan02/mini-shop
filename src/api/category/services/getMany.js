@@ -11,14 +11,17 @@ async function readMany(req, res) {
     const { search } = req.query;
     const { notSelectedLanguages } = req;
     const filter = { deleted: false };
-    const dispatchedLanguage = { name: `name${req.headers.language}` };
+    const dispatchedLanguage = { name: `name${language}` };
+    const regexpSearch = { $regex: `${search}`, $options: 'i' };
 
     const select = `-name${notSelectedLanguages[0]} -name${notSelectedLanguages[1]}`;
-    filter['$or'] = [
-      { [`name${language}`]: { $regex: `${search}`, $options: 'i' } },
-      { [`name${notSelectedLanguages[0]}`]: { $regex: `${search}`, $options: 'i' } },
-      { [`name${notSelectedLanguages[1]}`]: { $regex: `${search}`, $options: 'i' } },
-    ];
+    if (search) {
+      filter['$or'] = [
+        { [`name${language}`]: regexpSearch },
+        { [`name${notSelectedLanguages[0]}`]: regexpSearch },
+        { [`name${notSelectedLanguages[1]}`]: regexpSearch },
+      ];
+    }
 
     if (!req.user || req.user.role === USER_ROLES.user) {
       filter.productCount = { $gte: 1 };

@@ -10,7 +10,6 @@ function validateList(req, res, next) {
     priceTo: Joi.number().integer(),
     priceFrom: Joi.number().integer().min(10),
   });
-  console.log(req.query);
   const { error } = joiSchema.validate(req.query);
   if (error) {
     return sendFailedResponse(res, error);

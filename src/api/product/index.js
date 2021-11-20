@@ -20,7 +20,7 @@ router
 
 router
   .route('/:productId')
-  .get(authorizeGuestOrUser, searchProduct, read)
+  .get(authorizeGuestOrUser, validateLanguage, searchProduct, read)
   .delete(authorizeAdmin, searchProduct, delProd)
   .put(authorizeAdmin, upload.any('images'), searchProduct, validateProduct, update);
 

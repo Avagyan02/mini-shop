@@ -4,8 +4,8 @@ async function sendPaginatedList(res, Model, filter, pageNo, limit, select, mapp
   try {
     const mapKeys = Object.keys(mapping);
     const message = 'List fetched';
-    const filteredProductCount = await Model.countDocuments(filter);
-    if (!filteredProductCount) {
+    const filteredItemCount = await Model.countDocuments(filter);
+    if (!filteredItemCount) {
       return sendSuccessResponse(res, message,
         {
           count: 0,
@@ -13,11 +13,8 @@ async function sendPaginatedList(res, Model, filter, pageNo, limit, select, mapp
           list: [],
         });
     }
-    if (limit * pageNo > filteredProductCount) {
-      return sendFailedResponse(res, 'It is not possible to split into so many elements');
-    }
-    const filteredProduct = await Model.find(filter, { __v: 0 }).skip((pageNo - 1) * limit).limit(limit).select(select);
-    const itemList = filteredProduct.map((elem) => {
+    const filteredItem = await Model.find(filter).skip((pageNo - 1) * limit).limit(limit).select(select);
+    const itemList = filteredItem.map((elem) => {
       mapKeys.forEach((key) => {
         if (elem[key]) {
           elem[mapping[key]] = elem[key];
@@ -27,8 +24,8 @@ async function sendPaginatedList(res, Model, filter, pageNo, limit, select, mapp
       return elem;
     });
     return sendSuccessResponse(res, message, {
-      count: filteredProductCount,
-      pageCount: Math.ceil(filteredProductCount / pageNo),
+      count: filteredItemCount,
+      pageCount: Math.ceil(filteredItemCount / pageNo),
       list: itemList,
     });
   } catch (error) {

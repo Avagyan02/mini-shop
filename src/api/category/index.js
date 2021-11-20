@@ -21,6 +21,6 @@ router
   .route('/:categoryId')
   .put(authorizeAdmin, search, validate, update)
   .delete(authorizeAdmin, search, delCat)
-  .get(authorizeGuestOrUser, search, read);
+  .get(authorizeGuestOrUser, validateLanguage, search, read);
 
 export default router;
