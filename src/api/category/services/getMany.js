@@ -9,11 +9,10 @@ async function readMany(req, res) {
     const pageNo = +req.query.pageNo;
     const { language } = req.headers;
     const { search } = req.query;
-    const { notSelectedLanguages } = req;
+    const notSelectedLanguages = Object.keys(req.notSelectedLanguages);
     const filter = { deleted: false };
     const dispatchedLanguage = { name: `name${language}` };
     const regexpSearch = { $regex: `${search}`, $options: 'i' };
-
     const select = `-name${notSelectedLanguages[0]} -name${notSelectedLanguages[1]}`;
     if (search) {
       filter['$or'] = [

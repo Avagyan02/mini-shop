@@ -10,7 +10,7 @@ async function readMany(req, res) {
     const priceFrom = +req.query.priceFrom;
     const { language } = req.headers;
     const { search } = req.query;
-    const { notSelectedLanguages } = req;
+    const notSelectedLanguages = Object.keys(req.notSelectedLanguages);
     const filter = { deleted: false };
     const regexpSearch = { $regex: `${search}`, $options: 'i' };
 

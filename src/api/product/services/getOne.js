@@ -1,4 +1,3 @@
-import Product from '../../../models/product';
 import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseHelpers';
 
 async function read(req, res) {

@@ -6,11 +6,16 @@ import { sendFailedResponse, sendErrorResponse } from '../../../utils/responseHe
 async function searchProduct(req, res, next) {
   try {
     const id = req.params.productId;
+    const notSelectedLanguages = Object.keys(req.notSelectedLanguages);
+
     if (!ObjectIDRegexp.test(id)) {
       deleteFile(req.files);
       return sendFailedResponse(res);
     }
-    const product = await Product.findOne({ _id: id, deleted: false });
+    const product = await Product
+      .findOne({ _id: id, deleted: false })
+      .select(`-name${notSelectedLanguages[0]} -name${notSelectedLanguages[1]} 
+        -description${notSelectedLanguages[0]} -description${notSelectedLanguages[1]}`);
     if (!product) {
       deleteFile(req.files);
       return sendFailedResponse(res);
