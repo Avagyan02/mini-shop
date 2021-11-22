@@ -5,7 +5,6 @@ async function sendPaginatedList(res, Model, filter, pageNo, limit, select, mapp
     const mapKeys = Object.keys(mapping);
     const message = 'List fetched';
     const filteredItemCount = await Model.countDocuments(filter);
-    const pageCount = Math.ceil(filteredItemCount / limit);
     if (!filteredItemCount) {
       return sendSuccessResponse(res, message,
         {
@@ -14,6 +13,8 @@ async function sendPaginatedList(res, Model, filter, pageNo, limit, select, mapp
           list: [],
         });
     }
+
+    const pageCount = Math.ceil(filteredItemCount / limit);
     if (pageCount < pageNo) {
       return sendFailedResponse(res, 'It is not possible to split into so many elements');
     }

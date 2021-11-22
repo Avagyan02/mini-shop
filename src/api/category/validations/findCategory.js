@@ -5,7 +5,7 @@ import { sendFailedResponse, sendErrorResponse } from '../../../utils/responseHe
 async function searchCategory(req, res, next) {
   try {
     const id = req.params.categoryId;
-    const notSelectedLanguages = Object.keys(req.notSelectedLanguages);
+    const { notSelectedLanguages } = req;
 
     if (!ObjectIDRegexp.test(id)) {
       return sendFailedResponse(res);

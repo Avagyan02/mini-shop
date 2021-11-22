@@ -6,7 +6,7 @@ import { sendFailedResponse, sendErrorResponse } from '../../../utils/responseHe
 async function searchProduct(req, res, next) {
   try {
     const id = req.params.productId;
-    const notSelectedLanguages = Object.keys(req.notSelectedLanguages);
+    const { notSelectedLanguages } = req;
 
     if (!ObjectIDRegexp.test(id)) {
       deleteFile(req.files);

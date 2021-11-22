@@ -3,13 +3,16 @@ import { sendFailedResponse } from '../utils/responseHelpers';
 
 function validateLanguage(req, res, next) {
   const language = +req.headers.language;
-  const languageNames = ['Hy', 'Ru', 'En'];
   switch (language) {
     case Languages.Hy:
     case Languages.En:
     case Languages.Ru:
-      const { [languageNames[language - 1]]: name, ...rest } = Languages;
-      req.notSelectedLanguages = rest;
+      const languageNames = Object.keys(Languages);
+      const languageValues = Object.values(Languages);
+      if (languageValues.includes(language)) {
+        req.selectedLanguages = languageNames.splice(languageValues.indexOf(language), 1)[0];
+        req.notSelectedLanguages = languageNames;
+      }
       next();
       break;
     default:
