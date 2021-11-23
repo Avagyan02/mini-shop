@@ -10,7 +10,7 @@ function validateLanguage(req, res, next) {
       const languageNames = Object.keys(Languages);
       const languageValues = Object.values(Languages);
       if (languageValues.includes(language)) {
-        req.selectedLanguages = languageNames.splice(languageValues.indexOf(language), 1)[0];
+        req.selectedLanguage = languageNames.splice(languageValues.indexOf(language), 1)[0];
         req.notSelectedLanguages = languageNames;
       }
       next();

@@ -2,12 +2,12 @@ import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseH
 
 async function read(req, res) {
   try {
-    const { product, selectedLanguages } = req;
+    const { product, selectedLanguage } = req;
     product.viewCount++;
     await product.save();
     const {
-      [`name${selectedLanguages}`]: name,
-      [`description${selectedLanguages}`]: description,
+      [`name${selectedLanguage}`]: name,
+      [`description${selectedLanguage}`]: description,
       ...rest
     } = product._doc;
     sendSuccessResponse(res, 'Product details fetched', { name, description, ...rest });

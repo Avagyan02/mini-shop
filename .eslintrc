@@ -23,6 +23,7 @@
     "no-dupe-keys": "off",
     "prefer-destructuring": "off",
     "no-param-reassign": "off",
-    "no-case-declarations": "off"
+    "no-case-declarations": "off",
+    "object-shorthand": "off"
   }
 }

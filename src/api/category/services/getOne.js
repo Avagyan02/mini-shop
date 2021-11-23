@@ -2,8 +2,8 @@ import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseH
 
 async function read(req, res) {
   try {
-    const { category, selectedLanguages } = req;
-    const { [`name${selectedLanguages}`]: name, ...rest } = category._doc;
+    const { category, selectedLanguage } = req;
+    const { [`name${selectedLanguage}`]: name, ...rest } = category._doc;
     sendSuccessResponse(res, 'Category details fetched', { name, ...rest });
   } catch (error) {
     sendErrorResponse(error, res);
