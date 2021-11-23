@@ -37,4 +37,10 @@ export const FILE_TYPES = {
   file: 4,
 };
 
+export const Languages = {
+  Hy: 1,
+  Ru: 2,
+  En: 3,
+};
+
 export const ObjectIDRegexp = new RegExp(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i);

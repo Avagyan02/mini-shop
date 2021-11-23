@@ -39,7 +39,6 @@ function authorizeFactory(acceptedRoles) {
         return sendFailedResponse(res, HTTP_STATUSES.FORBIDDEN.message, HTTP_STATUSES.FORBIDDEN.code);
       }
     } catch (error) {
-      console.log(3);
       sendErrorResponse(error, res);
     }
   };
