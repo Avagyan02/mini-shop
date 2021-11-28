@@ -43,4 +43,10 @@ export const Languages = {
   En: 3,
 };
 
+export const OrderStatuses = {
+  created: 1,
+  pending: 2,
+  done: 3,
+};
+
 export const ObjectIDRegexp = new RegExp(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i);
