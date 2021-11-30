@@ -3,7 +3,7 @@ import { sendSuccessResponse, sendErrorResponse } from '../../../utils/responseH
 
 async function updatedOrder(req, res) {
   const { order } = req;
-  const orderStatus = +req.headers['order-status'];
+  const orderStatus = +req.headers.orderstatus;
   order.status = orderStatus;
 
   try {

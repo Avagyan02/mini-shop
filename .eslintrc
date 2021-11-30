@@ -24,6 +24,8 @@
     "prefer-destructuring": "off",
     "no-param-reassign": "off",
     "no-case-declarations": "off",
-    "object-shorthand": "off"
+    "object-shorthand": "off",
+    "arrow-body-style": "off",
+    "default-case": "off"
   }
 }

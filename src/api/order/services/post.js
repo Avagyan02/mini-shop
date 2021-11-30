@@ -5,17 +5,14 @@ async function createOrder(req, res) {
   const { productList } = req.body;
   const { orderProducts, user } = req;
   const order = { userId: user._id, productList: [] };
-  const updatedProducts = [];
   let allPrice = 0;
-  let quantityOrderItem;
 
-  orderProducts.forEach((elem, i) => {
+  const updatedProducts = orderProducts.map((elem, i) => {
     order.productList[i] = { id: elem._id, price: elem.price };
-    quantityOrderItem = productList.find((item) => item.id === order.productList[i].id.toString());
-    order.productList[i].quantity = quantityOrderItem.quantity;
-    allPrice += elem.price * quantityOrderItem.quantity;
-    elem.quantity -= quantityOrderItem.quantity;
-    updatedProducts.push(elem.save());
+    order.productList[i].quantity = productList[i].quantity;
+    allPrice += elem.price * productList[i].quantity;
+    elem.quantity -= productList[i].quantity;
+    return elem.save();
   });
 
   try {
