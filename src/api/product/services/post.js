@@ -28,7 +28,6 @@ async function create(req, res) {
 
   try {
     await Promise.all([updatedCategory, product]);
-    console.log(product);
     sendSuccessResponse(res, 'Product created');
   } catch (error) {
     deleteFile(req.files);
