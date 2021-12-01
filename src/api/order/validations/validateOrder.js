@@ -24,7 +24,7 @@ async function validateOrder(req, res, next) {
         return Product.findOne({ _id: item.id, quantity: { $gte: item.quantity }, deleted: false });
       }),
     );
-    const checkObject = result.every((elem) => elem instanceof Object);
+    const checkObject = result.every((elem) => !!elem);
     if (!checkObject) {
       return sendFailedResponse(res);
     }

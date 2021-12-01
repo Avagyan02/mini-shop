@@ -8,8 +8,11 @@ async function createOrder(req, res) {
   let allPrice = 0;
 
   const updatedProducts = orderProducts.map((elem, i) => {
-    order.productList[i] = { id: elem._id, price: elem.price };
-    order.productList[i].quantity = productList[i].quantity;
+    order.productList.push({
+      id: elem._id,
+      price: elem.price,
+      quantity: productList[i].quantity,
+    });
     allPrice += elem.price * productList[i].quantity;
     elem.quantity -= productList[i].quantity;
     return elem.save();
