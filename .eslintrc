@@ -26,6 +26,8 @@
     "no-case-declarations": "off",
     "object-shorthand": "off",
     "arrow-body-style": "off",
-    "default-case": "off"
+    "default-case": "off",
+    "one-var-declaration-per-line": "off",
+    "one-var": "off"
   }
 }

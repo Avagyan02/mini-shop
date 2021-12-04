@@ -1,19 +1,22 @@
-import sendPaginatedOrderList from '../../../utils/sendPaginatedOrderList';
+import Order from '../../../models/order';
+import sendPaginatedList from '../../../utils/sendPaginatedList';
 import { USER_ROLES } from '../../../utils/constants';
 import { sendErrorResponse } from '../../../utils/responseHelpers';
 
-function getOrderList(req, res) {
+async function getOrderList(req, res) {
   try {
     const {
       limit, pageNo, status, dateFrom, dateTo,
     } = req.body;
     const { user } = req;
-    let filter = {};
+    const filter = {};
 
-    if (status && user.role === USER_ROLES.user) {
-      filter = { status: status, userId: user._id };
-    } else if (status) {
-      filter = { status: status };
+    if (user.role === USER_ROLES.user) {
+      filter.userId = user._id;
+    }
+
+    if (status) {
+      filter.status = status;
     }
 
     if (dateFrom && dateTo) {
@@ -24,7 +27,7 @@ function getOrderList(req, res) {
       filter.createDt = { $lte: dateTo };
     }
 
-    return sendPaginatedOrderList(res, limit, pageNo, filter);
+    return await sendPaginatedList(res, Order, filter, pageNo, limit);
   } catch (error) {
     return sendErrorResponse(error, res);
   }
