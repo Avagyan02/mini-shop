@@ -6,16 +6,18 @@ async function findOrder(req, res, next) {
   try {
     const { user } = req;
     const id = req.params.orderId;
+    const filter = { _id: id };
 
     if (!ObjectIDRegexp.test(id)) {
       return sendFailedResponse(res);
+    }
+    if (USER_ROLES.user === user.role) {
+      filter.userId = user._id;
     }
 
     const order = await Order.findOne({ _id: id });
     if (!order) {
       return sendFailedResponse(res);
-    } else if (USER_ROLES.user === user.role && order.userId.toString() !== user._id.toString()) {
-      return sendFailedResponse(res, HTTP_STATUSES.FORBIDDEN.message, HTTP_STATUSES.FORBIDDEN.code);
     }
     req.order = order;
     next();
