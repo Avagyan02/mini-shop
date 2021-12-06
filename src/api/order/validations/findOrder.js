@@ -6,11 +6,12 @@ async function findOrder(req, res, next) {
   try {
     const { user } = req;
     const id = req.params.orderId;
-    const filter = { _id: id };
 
     if (!ObjectIDRegexp.test(id)) {
       return sendFailedResponse(res);
     }
+
+    const filter = { _id: id };
     if (USER_ROLES.user === user.role) {
       filter.userId = user._id;
     }
