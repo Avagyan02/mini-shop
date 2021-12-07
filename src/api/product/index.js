@@ -6,6 +6,7 @@ import update from './services/put';
 import create from './services/post';
 import read from './services/getOne';
 import delProd from './services/delete';
+import checkFilesArrayLength from '../../middlewares/checkFilesArrayLength';
 import upload from '../../middlewares/upload';
 import { authorizeAdmin, authorizeGuestOrUser } from '../../middlewares/authorize';
 import validateList from '../../middlewares/validateList';
@@ -15,7 +16,7 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(authorizeAdmin, upload.any('images'), validateProduct, create)
+  .post(authorizeAdmin, upload.any('images'), checkFilesArrayLength, validateProduct, create)
   .get(authorizeGuestOrUser, validateLanguage, validateList, readMany);
 
 router

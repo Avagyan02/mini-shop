@@ -1,7 +1,8 @@
 import File from '../models/files';
+import { sendFailedResponse } from './responseHelpers';
 import { FILE_TYPES } from './constants';
 
-async function saveImagesFrom(fileList) {
+async function saveImagesFromUpload(fileList) {
   const insertData = fileList.map((elem) => ({
     originalName: elem.originalname,
     path: elem.path,
@@ -11,4 +12,4 @@ async function saveImagesFrom(fileList) {
   return createdFiles.map((elem) => elem._id);
 }
 
-export default saveImagesFrom;
+export default saveImagesFromUpload;

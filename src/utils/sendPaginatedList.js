@@ -21,17 +21,16 @@ async function sendPaginatedList(res, Model, filter, pageNo, limit, select, mapp
     if (select) {
       fetchPromise.select(select);
     }
-    let itemList = await fetchPromise;
+    const itemList = await fetchPromise;
     if (mapping) {
       const mapKeys = Object.keys(mapping);
-      itemList = itemList.map((elem) => {
+      itemList.forEach((elem) => {
         mapKeys.forEach((key) => {
           if (elem[key]) {
             elem[mapping[key]] = elem[key];
             delete elem[key];
           }
         });
-        return elem;
       });
     }
     return sendSuccessResponse(res, message, {
