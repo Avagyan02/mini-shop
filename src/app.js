@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 import categoryRouter from './api/category/index';
 import authRouter from './api/auth/index';
 import productRouter from './api/product/index';
@@ -12,6 +13,7 @@ app.use('/category', categoryRouter);
 app.use('/auth', authRouter);
 app.use('/product', productRouter);
 app.use('/order', orderRouter);
+app.use('/files', express.static(path.resolve('media')));
 
 app.use(notFound);
 
