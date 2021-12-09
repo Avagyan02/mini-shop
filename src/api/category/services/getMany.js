@@ -24,7 +24,7 @@ async function readMany(req, res) {
     if (!req.user || req.user.role === USER_ROLES.user) {
       filter.productCount = { $gte: 1 };
     }
-    return sendPaginatedList(res, Category, filter, pageNo, limit, select, dispatchedLanguage);
+    return await sendPaginatedList(res, Category, filter, pageNo, limit, select, dispatchedLanguage);
   } catch (error) {
     sendErrorResponse(error, res);
   }

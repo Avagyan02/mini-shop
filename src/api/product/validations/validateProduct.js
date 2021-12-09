@@ -49,9 +49,6 @@ async function validateProduct(req, res, next) {
       .pattern(ObjectIDRegexp)
       .required(),
 
-    image: Joi.array()
-      .items(Joi.object()),
-
     deleteImageIdList: Joi.array()
       .items(Joi.string().pattern(ObjectIDRegexp)).unique(),
   });
