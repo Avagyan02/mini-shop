@@ -16,7 +16,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'cd /data/prod/mini-shop && rm -r mini-shop/'
+                sh 'cd /data/prod && rm -r mini-shop/'
                 sh 'cp -r /var/jenkins_home/workspace/mini-shop /data/prod'
             }
         }
