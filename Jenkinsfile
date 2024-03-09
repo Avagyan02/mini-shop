@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'cd /data/mini-shop/prod'
+                sh 'cd /data/prod/mini-shop'
                 sh 'npm install'
             }
         }
@@ -16,8 +16,8 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'cd /data/mini-shop/prod && rm -r mini-shop/'
-                sh 'cp /var/jenkins_home/workspace/mini-shop /data/prod'
+                sh 'cd /data/prod/mini-shop && rm -r mini-shop/'
+                sh 'cp -r /var/jenkins_home/workspace/mini-shop /data/prod'
             }
         }
     }
