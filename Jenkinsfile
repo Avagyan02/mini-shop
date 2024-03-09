@@ -16,11 +16,12 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                script {
-                    def changeSets = currentBuild.changeSets
-                }
+                // script {
+                //     def changeSets = currentBuild.changeSets
+                // }
 
-                ah 'node -v'
+                sh 'node -v'
+                sh 'ls -la /var/lib/jenkins/workspace/'
             }
         }
     }
