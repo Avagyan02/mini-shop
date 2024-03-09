@@ -14,9 +14,11 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                def changeSets = currentBuild.changeSets
-                echo changeSets
                 checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'githubtoken', url: 'https://github.com/Avagyan02/mini-shop.git']])                
+                script {
+                    def changeSets = currentBuild.changeSets
+                    echo changeSets
+                }
             }
         }
     }
