@@ -1,6 +1,14 @@
 pipeline {
     agent any
-
+    triggers {
+            GenericTrigger(
+            genericVariables: [
+                [key: 'targetBranchName', value: '$.body.pull_request.base.ref'],
+                [key: 'sourseBranchName', value: '$.body.pull_request.head.ref'],
+            ],
+            token: 'my-webhook-token'
+        )
+    }
     stages {
         stage('Build') {
             steps {
