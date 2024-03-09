@@ -1,23 +1,11 @@
 pipeline {
-  agent any
-  triggers {
-    GenericTrigger(
-     genericVariables: [
-      [key: 'branch', value: 'main']
-     ],
-     causeString: 'Triggered on $ref',
-     regexpFilterExpression: '',
-     regexpFilterText: '',
-     printContributedVariables: true,
-     printPostContent: true
-    )
-  }
-  stages {
-    stage('Some step') {
-      steps {
-        sh "echo $branch"
-        git credentialsId: 'c9294c2b-1dda-4a4c-9cdb-631a9abca249', url: 'https://github.com/Avagyan02/mini-shop.git'
-      }
+    agent any
+
+    stages {
+        stage('Hello') {
+            steps {
+                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'githubtoken', url: 'https://github.com/Avagyan02/mini-shop.git']])                
+            }
+        }
     }
-  }
 }
