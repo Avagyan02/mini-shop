@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'cd /data'
+                sh 'cd /data/mini-shop/prod'
                 sh 'npm install'
             }
         }
@@ -16,12 +16,8 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                // script {
-                //     def changeSets = currentBuild.changeSets
-                // }
-
-                sh 'node -v'
-                sh 'ls -la /var/lib/jenkins/workspace/'
+                sh 'cd /data/mini-shop/prod && rm -r mini-shop/'
+                sh 'cp /var/jenkins_home/workspace/mini-shop /data/prod'
             }
         }
     }
