@@ -1,0 +1,35 @@
+name: 'MyWorkflow2'
+
+on:
+    push:
+        tags:
+          - '[0-9].+[0-9].+[0-9]'
+
+jobs:
+    build:
+      runs-on:
+        - self-hosted
+        - my-host
+  
+      steps: 
+        - name: Checkout to project repository
+          uses: actions/checkout@v3
+          with:
+            repository: Avagyan02/Github_action_task
+            ref: master
+            token: ${{ secrets.PERSONAL_TOKEN }}
+
+        - name: Get commit hash
+          id: get_commit_hash
+          run: echo "::set-output name=commit_hash::$(git rev-parse --short HEAD)"
+
+
+        - name: Initialize Terraform
+          uses: hashicorp/setup-terraform@v1
+          with:
+            terraform_version: 1.0.0
+    
+        - name: Terraform apply
+          run: |
+            terraform init
+            terraform apply -auto-approve -var "commit_hash=${{ steps.get_commit_hash.outputs.commit_hash }}"
