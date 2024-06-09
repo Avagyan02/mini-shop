@@ -2,14 +2,15 @@ name: 'MyWorkflow2'
 
 on:
     push:
+        branches:
+          - master
         tags:
           - '[0-9].+[0-9].+[0-9]'
 
 jobs:
-    build:
-      runs-on:
-        - self-hosted
-        - my-host
+    deploy:
+      runs-on: ubuntu-latest
+
   
       steps: 
         - name: Checkout to project repository
